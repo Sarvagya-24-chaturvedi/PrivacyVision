@@ -1,0 +1,21 @@
+{
+  "name": "browser_demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dom_extractor.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "html2canvas": "^1.4.1",
+    "onnxruntime-web": "^1.29.0"
+  },
+  "devDependencies": {
+    "vite": "^8.2.2"
+  }
+}
