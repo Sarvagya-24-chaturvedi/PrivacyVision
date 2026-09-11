@@ -35,42 +35,75 @@ PrivacyVision introduces an **On-Device Cryptographic & Privacy Boundary** direc
 
 ```mermaid
 flowchart TD
-    UserPage[Web Page DOM] --> ContentScript[Content Script: DOM & A11y Extraction]
-    UserPage --> Capture[chrome.tabs.captureVisibleTab]
-    
-    subgraph Client [Chrome Extension Manifest V3 - Local On-Device Boundary]
-        ContentScript --> DOMDetector[DOM Semantic Detector]
-        ContentScript --> RegexDetector[Regex & Pattern Detector]
-        Capture --> LocalVision[Local Vision / WebGPU / WASM Adapter]
-        Capture --> OCRDetector[Local OCR Detector]
-        Capture --> FaceDetector[Local Face Detector]
-        
-        DOMDetector --> RiskEngine[Risk Scoring Engine 0.0 - 1.0]
+    User[👤 User]:::user -->|Task prompt / settings| Popup[Extension Popup UI<br/>Consent · Redaction Level<br/>Kill Switch]:::ui
+    Popup --> SW
+
+    subgraph Client["🔒 Chrome Extension — Manifest V3<br/>On-Device Trust Boundary"]
+        SW[Background Service Worker<br/>Orchestrator + Session State]:::core
+
+        SW -->|inject| CS[Content Script<br/>DOM + A11y Extraction]:::extract
+        SW -->|invoke| Capture[chrome.tabs<br/>captureVisibleTab]:::extract
+
+        CS --> DOMDetector[DOM Semantic<br/>Detector]:::detect
+        CS --> RegexDetector[Regex / NER<br/>PII Detector]:::detect
+        Capture --> LocalVision[Local Vision Model<br/>WebGPU / WASM]:::detect
+        Capture --> OCRDetector[Local OCR<br/>Detector]:::detect
+        Capture --> FaceDetector[Local Face<br/>Detector]:::detect
+
+        DOMDetector --> RiskEngine[Risk Scoring Engine<br/>0.0 – 1.0 weighted fusion]:::risk
         RegexDetector --> RiskEngine
         LocalVision --> RiskEngine
         OCRDetector --> RiskEngine
         FaceDetector --> RiskEngine
-        
-        RiskEngine --> BBoxMerger[Bounding Box Fusion & IoU Merger]
-        BBoxMerger --> Redactor[Offscreen Canvas Redactor: Blackout / Mask / Blur]
-        
-        Redactor --> SanitizedVisual[Sanitized Screenshot]
-        ContentScript --> SanitizedDOM[Privacy-Safe Structural DOM]
-        
-        SanitizedVisual --> Firewall[Privacy Firewall: Outbound Leak Verification]
+
+        RiskEngine --> BBoxMerger[Bounding Box Fusion<br/>IoU Merge]:::risk
+        BBoxMerger --> Redactor[Offscreen Canvas Redactor<br/>Blackout · Mask · Blur]:::risk
+
+        Redactor --> SanitizedVisual[Sanitized<br/>Screenshot]:::safe
+        CS --> SanitizedDOM[Privacy-Safe<br/>Structural DOM]:::safe
+
+        SanitizedVisual --> Firewall{Outbound Privacy Firewall<br/>leak diff · allowlist · size cap}:::firewall
         SanitizedDOM --> Firewall
+
+        Firewall -->|❌ leak detected| Block[Abort + Alert User<br/>no network call made]:::danger
+        Firewall -->|✅ pass| Egress[Signed Request<br/>API key / HMAC + session id]:::safe
+
+        SW <--> SessionStore[(Local Session State<br/>task id · step history · retries)]:::core
     end
 
-    Firewall -->|SAFE Payload Only| ServerEndpoint[FastAPI Server: /api/agent]
+    Egress ==>|HTTPS · SAFE payload only| Gateway
 
-    subgraph Server [Backend Reasoning Layer]
-        ServerEndpoint --> VLMService[VLM / Ollama / LLaVA / Qwen-VL Reasoning]
-        VLMService --> ActionParser[Structured Action JSON Parser]
+    subgraph Server["☁️ Backend Reasoning Layer<br/>Untrusted Network Boundary"]
+        Gateway[FastAPI Gateway<br/>AuthN + Rate Limit]:::server
+        Gateway --> ServerAudit{Server-Side Redaction Audit<br/>reject on residual PII}:::firewall
+        ServerAudit --> VLMRouter[VLM Router<br/>Ollama / LLaVA / Qwen-VL<br/>local-first, cloud opt-in]:::server
+        VLMRouter --> ActionParser[Structured Action JSON<br/>schema-validated]:::server
     end
 
-    ActionParser -->|Constrained Action JSON| ClientActionValidator[Local Action Validator]
-    ClientActionValidator -->|Validated Execution| DOMExec[Browser Action Execution: Click / Type / Scroll]
-    DOMExec --> UserPage
+    ActionParser ==>|Constrained Action JSON| ClientValidator[Local Action Validator<br/>whitelist + element check]:::core
+
+    ClientValidator -->|low-risk| DOMExec[Execute:<br/>Click / Type / Scroll]:::action
+    ClientValidator -->|high-risk:<br/>payment, submit, delete| Confirm{Human-in-the-Loop<br/>Confirmation}:::danger
+    Confirm -->|approved| DOMExec
+    Confirm -->|denied| SW
+
+    DOMExec --> UserPage[🌐 Web Page DOM]:::ui
+    DOMExec -.->|loop: next observation| SW
+
+    classDef user fill:#F5F3FF,stroke:#7C3AED,stroke-width:1.5px,color:#4C1D95
+    classDef ui fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#312E81
+    classDef core fill:#E0E7FF,stroke:#4F46E5,stroke-width:2px,color:#312E81
+    classDef extract fill:#EDE9FE,stroke:#8B5CF6,stroke-width:1.5px,color:#4C1D95
+    classDef detect fill:#F3E8FF,stroke:#A855F7,stroke-width:1.5px,color:#581C87
+    classDef risk fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#334155
+    classDef safe fill:#D1FAE5,stroke:#059669,stroke-width:1.5px,color:#064E3B
+    classDef firewall fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D
+    classDef danger fill:#FECACA,stroke:#B91C1C,stroke-width:2px,color:#7F1D1D
+    classDef server fill:#CCFBF1,stroke:#0D9488,stroke-width:1.5px,color:#134E4A
+    classDef action fill:#DBEAFE,stroke:#2563EB,stroke-width:1.5px,color:#1E3A8A
+
+    style Client fill:none,stroke:#94A3B8,stroke-width:2px,stroke-dasharray:6 4
+    style Server fill:none,stroke:#94A3B8,stroke-width:2px,stroke-dasharray:6 4
 ```
 
 ---
