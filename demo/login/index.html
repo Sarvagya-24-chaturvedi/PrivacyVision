@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 1 — Secure Login</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .login-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px;
+      width: 380px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { margin-bottom: 8px; color: #38bdf8; }
+    p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0b1120;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+    input:focus { outline: none; border-color: #38bdf8; }
+    .btn-submit {
+      width: 100%;
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-submit:hover { background: #0284c7; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-card">
+    <h2>Account Sign In</h2>
+    <p>SIH26171 Demo 1: Credentials will be detected and redacted locally before reaching server.</p>
+
+    <form id="login-form">
+      <div class="form-group">
+        <label for="user-email">Email Address</label>
+        <input type="email" id="user-email" name="email" value="john@example.com" autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="user-password">Password</label>
+        <input type="password" id="user-password" name="password" value="secretPassword123" autocomplete="current-password" />
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-login" role="button">Sign In to Dashboard</button>
+    </form>
+
+    <div class="success-alert" id="success-message">
+      ✓ Login Button Clicked! Browser action executed locally.
+    </div>
+
+    <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+  </div>
+
+  <script>
+    document.getElementById("login-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("success-message").style.display = "block";
+    });
+  </script>
+</body>
+</html>

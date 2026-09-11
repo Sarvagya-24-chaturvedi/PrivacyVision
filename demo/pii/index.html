@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 3 — Indian KYC / PII</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .kyc-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px;
+      width: 480px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { margin-bottom: 8px; color: #f59e0b; }
+    p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: flex; gap: 12px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0b1120;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+    input:focus { outline: none; border-color: #f59e0b; }
+    .btn-submit {
+      width: 100%;
+      background: #f59e0b;
+      color: #0f172a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-submit:hover { background: #d97706; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="kyc-box">
+    <h2>KYC Identity Verification</h2>
+    <p>SIH26171 Demo 3: Aadhaar, PAN, Indian phone (+91), and personal identifiers are detected and redacted locally.</p>
+
+    <form id="kyc-form">
+      <div class="form-group">
+        <label for="full-name">Full Legal Name</label>
+        <input type="text" id="full-name" name="name" value="Sarvagya Chaturvedi" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="user-email">Email Address</label>
+          <input type="email" id="user-email" name="email" value="sarvagya@gmail.com" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="user-phone">Phone Number (+91)</label>
+          <input type="tel" id="user-phone" name="phone" value="+91 9876543210" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="aadhaar-number">Aadhaar Number (12 Digits)</label>
+          <input type="text" id="aadhaar-number" name="aadhaar" value="2345 6789 0123" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="pan-number">PAN Card Number</label>
+          <input type="text" id="pan-number" name="pan" value="ABCDE1234F" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="user-address">Residential Address</label>
+        <input type="text" id="user-address" name="address" value="Flat 402, Green Valley Apartments, Bengaluru, Karnataka" />
+      </div>
+
+      <button type="submit" class="btn-submit" id="btn-kyc" role="button">Verify & Submit KYC</button>
+    </form>
+
+    <div class="success-alert" id="kyc-success">
+      ✓ KYC Submission Verified! Sensitive Indian identifiers remained strictly on device.
+    </div>
+
+    <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+  </div>
+
+  <script>
+    document.getElementById("kyc-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("kyc-success").style.display = "block";
+    });
+  </script>
+</body>
+</html>

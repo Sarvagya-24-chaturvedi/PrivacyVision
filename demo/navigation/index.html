@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 6 — Agent Navigation</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      margin: 0;
+      padding: 0;
+    }
+    .hero {
+      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 40px;
+      border-bottom: 2px dashed #334155;
+    }
+    h1 { font-size: 32px; color: #38bdf8; margin-bottom: 12px; }
+    p { font-size: 15px; color: #94a3b8; max-width: 600px; }
+    .scroll-indicator {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #f59e0b;
+      font-weight: 600;
+      animation: bounce 1.5s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+    .spacer {
+      height: 600px;
+      background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #64748b;
+      font-style: italic;
+    }
+    .footer-action-area {
+      min-height: 50vh;
+      background: #0b1120;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+    }
+    .action-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      width: 440px;
+    }
+    .btn-continue {
+      background: #38bdf8;
+      color: #0f172a;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.2s;
+    }
+    .btn-continue:hover { background: #0284c7; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 30px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Section 1: Above Fold -->
+  <div class="hero">
+    <h1>Multi-Step Agent Navigation</h1>
+    <p>SIH26171 Demo 6: The continue button is hidden deep below the viewport fold. The VLM reasons over the page, commands a SCROLL action down, reveals the button, and executes a CLICK action.</p>
+    <div class="scroll-indicator">↓ Scroll down to reveal continue action ↓</div>
+  </div>
+
+  <!-- Section 2: Spacer -->
+  <div class="spacer">
+    <span>[Long content section — offscreen from initial viewport]</span>
+  </div>
+
+  <!-- Section 3: Bottom Action -->
+  <div class="footer-action-area">
+    <div class="action-box">
+      <h2>Step Completed</h2>
+      <p>Click continue to finalize the workflow.</p>
+      <button type="button" class="btn-continue" id="btn-continue-nav" role="button">Continue to Final Step</button>
+
+      <div class="success-alert" id="nav-success">
+        🎉 Agent Navigation Successful! SCROLL and CLICK actions executed smoothly on client.
+      </div>
+
+      <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("btn-continue-nav").addEventListener("click", () => {
+      document.getElementById("nav-success").style.display = "block";
+    });
+  </script>
+</body>
+</html>

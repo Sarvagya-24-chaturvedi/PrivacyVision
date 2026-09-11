@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 4 — Visual-Only OCR PII</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .card-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px;
+      width: 480px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { margin-bottom: 8px; color: #818cf8; }
+    p { font-size: 13px; color: #94a3b8; margin-bottom: 20px; }
+    .canvas-container {
+      background: #060b13;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    canvas {
+      border: 1px dashed #64748b;
+      border-radius: 6px;
+    }
+    .badge-info {
+      font-size: 11px;
+      color: #38bdf8;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    .btn-action {
+      width: 100%;
+      background: #818cf8;
+      color: #0f172a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-action:hover { background: #6366f1; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card-box">
+    <h2>Visual-Only Canvas PII</h2>
+    <p>SIH26171 Demo 4: The sensitive email below is rendered directly inside pixel memory on an HTML5 canvas. No DOM text nodes exist for it. Local OCR detects and redacts it.</p>
+
+    <div class="canvas-container">
+      <canvas id="pii-canvas" width="400" height="120" data-rendered-text="Support contact: support@securebank.in"></canvas>
+      <span class="badge-info">Pixel Canvas Only — No DOM text inside</span>
+    </div>
+
+    <button type="button" class="btn-action" id="btn-ocr-verify">Confirm Visual Verification</button>
+
+    <div class="success-alert" id="ocr-success">
+      ✓ Action Verified! Local OCR detected visual text on canvas and applied redaction.
+    </div>
+
+    <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+  </div>
+
+  <script>
+    // Draw visual text onto canvas
+    const canvas = document.getElementById("pii-canvas");
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#0f172a";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "#94a3b8";
+    ctx.font = "12px sans-serif";
+    ctx.fillText("CONFIDENTIAL FINANCIAL BADGE", 20, 30);
+
+    ctx.fillStyle = "#38bdf8";
+    ctx.font = "bold 15px monospace";
+    ctx.fillText("support@securebank.in", 20, 65);
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "11px sans-serif";
+    ctx.fillText("Account PIN: [PROTECTED]", 20, 95);
+
+    document.getElementById("btn-ocr-verify").addEventListener("click", () => {
+      document.getElementById("ocr-success").style.display = "block";
+    });
+  </script>
+</body>
+</html>

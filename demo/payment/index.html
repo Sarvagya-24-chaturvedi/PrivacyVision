@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 2 — Payment Gateway</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .payment-box {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px;
+      width: 420px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { margin-bottom: 8px; color: #10b981; }
+    p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    .form-group { margin-bottom: 16px; }
+    .form-row { display: flex; gap: 12px; }
+    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #cbd5e1; }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      background: #0b1120;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 14px;
+    }
+    input:focus { outline: none; border-color: #10b981; }
+    .btn-pay {
+      width: 100%;
+      background: #10b981;
+      color: #0f172a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    .btn-pay:hover { background: #059669; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 18px;
+      font-size: 13px;
+      text-align: center;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-box">
+    <h2>Checkout & Payment</h2>
+    <p>SIH26171 Demo 2: Credit card, CVV, and UPI ID are masked locally on device.</p>
+
+    <form id="payment-form">
+      <div class="form-group">
+        <label for="card-holder">Cardholder Name</label>
+        <input type="text" id="card-holder" name="cardholder" value="Sarvagya Chaturvedi" />
+      </div>
+
+      <div class="form-group">
+        <label for="card-number">Credit / Debit Card Number</label>
+        <input type="text" id="card-number" name="cardnumber" value="4111 1111 1111 1111" autocomplete="cc-number" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="flex: 1;">
+          <label for="card-expiry">Expiry Date</label>
+          <input type="text" id="card-expiry" name="expiry" value="12/28" autocomplete="cc-exp" />
+        </div>
+        <div class="form-group" style="flex: 1;">
+          <label for="card-cvv">CVV / CVC</label>
+          <input type="password" id="card-cvv" name="cvv" value="789" autocomplete="cc-csc" maxlength="4" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="upi-id">Or Pay via UPI ID</label>
+        <input type="text" id="upi-id" name="upi" value="sarvagya@okhdfcbank" />
+      </div>
+
+      <button type="submit" class="btn-pay" id="btn-pay" role="button">Complete Payment (₹4,999)</button>
+    </form>
+
+    <div class="success-alert" id="payment-success">
+      ✓ Payment Triggered! VLM correctly clicked Pay without seeing card or CVV details.
+    </div>
+
+    <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+  </div>
+
+  <script>
+    document.getElementById("payment-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      document.getElementById("payment-success").style.display = "block";
+    });
+  </script>
+</body>
+</html>

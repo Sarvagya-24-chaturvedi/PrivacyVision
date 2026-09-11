@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyVision Demo 5 — Face Detection & Blurring</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .profile-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 32px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    h2 { margin-bottom: 8px; color: #06b6d4; }
+    p { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+    .avatar-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+    .face-avatar {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      border: 3px solid #06b6d4;
+      background: #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .user-info { margin-bottom: 24px; }
+    .user-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .user-role { font-size: 13px; color: #06b6d4; }
+    .btn-approve {
+      width: 100%;
+      background: #06b6d4;
+      color: #0f172a;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .btn-approve:hover { background: #0891b2; color: #fff; }
+    .success-alert {
+      display: none;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #10b981;
+      padding: 12px;
+      border-radius: 6px;
+      margin-top: 18px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile-card">
+    <h2>Biometric Face Privacy</h2>
+    <p>SIH26171 Demo 5: On-device detector locates human face and applies Gaussian blur before transmitting screenshot.</p>
+
+    <div class="avatar-wrapper">
+      <!-- High-detail SVG Face Portrait -->
+      <svg class="face-avatar" viewBox="0 0 100 100" data-face="true" data-type="face" id="user-portrait">
+        <!-- Background -->
+        <circle cx="50" cy="50" r="48" fill="#1e293b"/>
+        <!-- Face Head -->
+        <ellipse cx="50" cy="46" rx="28" ry="34" fill="#fed7aa"/>
+        <!-- Hair -->
+        <path d="M 22 40 C 22 20, 78 20, 78 40 C 72 26, 28 26, 22 40 Z" fill="#451a03"/>
+        <!-- Eyes -->
+        <ellipse cx="39" cy="42" rx="4" ry="3" fill="#1e293b"/>
+        <ellipse cx="61" cy="42" rx="4" ry="3" fill="#1e293b"/>
+        <!-- Eyebrows -->
+        <path d="M 34 36 Q 39 33 44 36" stroke="#451a03" stroke-width="2" fill="none"/>
+        <path d="M 56 36 Q 61 33 66 36" stroke="#451a03" stroke-width="2" fill="none"/>
+        <!-- Nose -->
+        <path d="M 50 44 L 48 53 L 52 53 Z" fill="#fbcfe8"/>
+        <!-- Mouth / Smile -->
+        <path d="M 42 62 Q 50 68 58 62" stroke="#e11d48" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <!-- Shoulders / Clothes -->
+        <path d="M 16 96 C 24 74, 76 74, 84 96 Z" fill="#0284c7"/>
+      </svg>
+    </div>
+
+    <div class="user-info">
+      <div class="user-name">Sarah Connor</div>
+      <div class="user-role">Verified Security Engineer</div>
+    </div>
+
+    <button type="button" class="btn-approve" id="btn-approve-profile" role="button">Approve Profile Verification</button>
+
+    <div class="success-alert" id="face-success">
+      ✓ Profile Approved! Face was blurred on-device with zero facial telemetry leaked.
+    </div>
+
+    <a href="../index.html" class="back-link">← Return to Demo Hub</a>
+  </div>
+
+  <script>
+    document.getElementById("btn-approve-profile").addEventListener("click", () => {
+      document.getElementById("face-success").style.display = "block";
+    });
+  </script>
+</body>
+</html>

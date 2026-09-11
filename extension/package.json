@@ -1,0 +1,22 @@
+{
+  "name": "privacy-vision-extension",
+  "version": "1.0.0",
+  "description": "PrivacyVision: On-device Visual Perception for Light-weight Browser Agents (SIH26171)",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "tsc && vite build && vite build --config vite.content.config.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "onnxruntime-web": "^1.18.0"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.268",
+    "@types/node": "^20.14.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.11",
+    "vitest": "^1.6.0"
+  }
+}
