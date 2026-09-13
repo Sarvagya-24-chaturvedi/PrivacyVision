@@ -43,8 +43,8 @@
       <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
       <button class="tab-btn" data-tab="inspection">Before / After</button>
       <button class="tab-btn" data-tab="network">Network Safety</button>
-      <button class="tab-btn" data-tab="benchmark">SIH Benchmark</button>
-      <button class="tab-btn" data-tab="judge">Judge Mode</button>
+      <button class="tab-btn" data-tab="benchmark">Benchmark</button>
+      <button class="tab-btn" data-tab="judge">Audit Mode</button>
     </nav>
 
     <!-- TAB 1: DASHBOARD -->
@@ -160,17 +160,17 @@
       </div>
     </section>
 
-    <!-- TAB 4: SIH BENCHMARK -->
+    <!-- TAB 4: BENCHMARK -->
     <section class="tab-content" id="tab-benchmark">
       <div class="benchmark-header">
         <div>
-          <h3>SIH26171 Evaluation Scorecard</h3>
+          <h3>PrivacyVision Evaluation Scorecard</h3>
           <p class="subtext">Real measured metrics against standard ground truth datasets</p>
         </div>
         <button class="btn btn-accent" id="btn-run-benchmark">Run Benchmark</button>
       </div>
 
-      <div class="sih-weights-grid">
+      <div class="weights-grid">
         <div class="weight-card">
           <div class="weight-title">Visual Context Accuracy (25%)</div>
           <div class="weight-val text-cyan" id="metric-accuracy">96.5%</div>
@@ -219,10 +219,10 @@
       </div>
     </section>
 
-    <!-- TAB 5: SIH JUDGE MODE -->
+    <!-- TAB 5: PRIVACY VERIFICATION & AUDIT MODE -->
     <section class="tab-content" id="tab-judge">
       <div class="judge-box">
-        <div class="judge-title">SIH26171 Judging Verification Mode</div>
+        <div class="judge-title">Privacy Verification & Audit Mode</div>
         <p class="judge-desc">Step-by-step cryptographic & structural privacy boundary verification.</p>
         <div class="judge-steps">
           <div class="step-item" id="step-1"><span class="step-num">1</span> <span class="step-text">Screen captured locally</span> <span class="step-status">✓</span></div>
@@ -240,7 +240,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-      <span>PrivacyVision v1.0.0 ● SIH26171</span>
+      <span>PrivacyVision v1.0.0</span>
       <a href="http://localhost:8000/docs" target="_blank" class="footer-link">API Docs</a>
     </footer>
   </div>

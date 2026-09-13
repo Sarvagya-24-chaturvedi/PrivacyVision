@@ -1,6 +1,6 @@
-# Step-by-Step Demonstration Guide for SIH Judges
+# Step-by-Step Demonstration Guide
 
-This document provides exact steps to demonstrate all 6 required demo scenarios for **SIH26171**.
+This document provides exact steps to demonstrate all 6 required demo scenarios for **PrivacyVision**.
 
 ---
 

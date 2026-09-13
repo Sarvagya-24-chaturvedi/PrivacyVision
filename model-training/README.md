@@ -1,4 +1,4 @@
-# MobileViT Browser Scene Classifier — Training Pipeline (SIH26171)
+# MobileViT Browser Scene Classifier — Training Pipeline
 
 ## Overview
 Fine-tunes `apple/mobilevit-small` to classify webpage screenshots into 6 categories:

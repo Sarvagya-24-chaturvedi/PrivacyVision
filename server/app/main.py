@@ -6,7 +6,7 @@ from .routes import health, agent
 
 app = FastAPI(
     title="PrivacyVision Reasoning Server",
-    description="Privacy-Preserving On-Device Visual Browser Agent Backend (SIH26171)",
+    description="Privacy-Preserving On-Device Visual Browser Agent Backend",
     version="1.0.0"
 )
 
@@ -23,8 +23,7 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(agent.router)
 
-# A judge-friendly local frontend: the interactive scenarios are available
-# from the same localhost origin as the API.
+# Interactive demo scenarios are available from the same localhost origin as the API.
 DEMO_DIR = Path(__file__).resolve().parents[2] / "demo"
 if DEMO_DIR.is_dir():
     app.mount("/demo", StaticFiles(directory=str(DEMO_DIR), html=True), name="demo")
@@ -38,7 +37,6 @@ async def compatibility_agent(req: agent.AgentRequest):
 def root():
     return {
         "service": "PrivacyVision Reasoning Server",
-        "problem_statement": "SIH26171",
         "status": "online",
         "docs": "/docs",
         "demo": "/demo",

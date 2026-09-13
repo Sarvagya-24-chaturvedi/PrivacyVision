@@ -1,5 +1,5 @@
 """
-MobileViT Browser Scene Classifier Training (SIH26171)
+MobileViT Browser Scene Classifier Training
 Fine-tunes apple/mobilevit-small on synthetic webpage screenshots.
 
 Classes: login, payment, form, pii, dashboard, modal

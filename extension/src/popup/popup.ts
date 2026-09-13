@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Action: Run Benchmark
   btnRunBenchmark.addEventListener("click", async () => {
-    addLog("Executing SIH26171 evaluation benchmark suite...", "info");
+    addLog("Executing evaluation benchmark suite...", "info");
     btnRunBenchmark.disabled = true;
 
     try {

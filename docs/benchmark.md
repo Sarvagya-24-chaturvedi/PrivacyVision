@@ -1,6 +1,6 @@
-# SIH26171 Evaluation Benchmark & Metrics Specification
+# PrivacyVision Evaluation Benchmark & Metrics Specification
 
-This document details the benchmarking framework implemented for Problem Statement **SIH26171**.
+This document details the benchmarking framework implemented for **PrivacyVision**.
 
 ## 1. Evaluation Metric Breakdown
 
@@ -38,6 +38,6 @@ The extension captures granular timing profiles for every operation:
 
 1. Open any demo page from `demo/index.html`.
 2. Open the **PrivacyVision** extension popup.
-3. Switch to the **SIH Benchmark** tab.
+3. Switch to the **Benchmark** tab.
 4. Click **[Run Benchmark]**.
 5. The live telemetry engine executes real detections against the ground-truth annotations and populates the evaluation scorecard.

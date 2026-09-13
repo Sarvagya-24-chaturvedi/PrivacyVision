@@ -20,16 +20,16 @@ export interface GroundTruthItem {
 }
 
 export interface EvaluationMetrics {
-  visualAccuracyScore: number;     // 0-100% (25% SIH weight)
-  precision: number;               // 0.0 - 1.0 (20% SIH weight)
+  visualAccuracyScore: number;     // 0-100% (25% weight)
+  precision: number;               // 0.0 - 1.0 (20% weight)
   recall: number;                  // 0.0 - 1.0
   f1Score: number;
-  averageIoU: number;              // 0.0 - 1.0 (20% SIH weight)
+  averageIoU: number;              // 0.0 - 1.0 (20% weight)
   truePositives: number;
   falsePositives: number;
   falseNegatives: number;
-  memoryUsageMb?: number;          // (20% SIH weight)
+  memoryUsageMb?: number;          // (20% weight)
   inferenceBackend: "WebGPU" | "WASM" | "HEURISTIC";
-  timings: TimingBreakdown;        // Latency (15% SIH weight)
+  timings: TimingBreakdown;        // Latency (15% weight)
   timestamp: number;
 }

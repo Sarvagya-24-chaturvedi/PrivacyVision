@@ -1,8 +1,8 @@
-# Architecture & Security Design — PrivacyVision (SIH26171)
+# Architecture & Security Design — PrivacyVision
 
 ## 1. Executive Summary
 
-PrivacyVision implements an on-device privacy-preserving visual browser agent designed for Problem Statement **SIH26171** (*On-device Visual Perception for Light-weight Browser Agents*).
+PrivacyVision implements an on-device privacy-preserving visual browser agent designed for lightweight, secure autonomous browser workflows.
 
 The core tenet is:
 > **"See locally. Sanitize locally. Reason remotely. Act locally."**

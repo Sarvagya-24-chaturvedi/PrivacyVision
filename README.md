@@ -1,6 +1,5 @@
 # PrivacyVision — On-Device Visual Browser Agent
 
-[![SIH Problem Statement](https://img.shields.io/badge/SIH-SIH26171-blue.svg)](https://www.sih.gov.in/)
 [![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-success.svg)](#)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-blue.svg)](#)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-teal.svg)](#)
@@ -8,11 +7,11 @@
 
 > **"See locally. Sanitize locally. Reason remotely. Act locally."**
 
-PrivacyVision is an on-device visual perception and privacy-preserving browser agent built for **Smart India Hackathon (SIH26171)**: *On-device Visual Perception for Light-weight Browser Agents*.
+PrivacyVision is an on-device visual perception and privacy-preserving browser agent for lightweight autonomous web automation.
 
 ---
 
-## 1. Problem Statement
+## 1. Overview & Motivation
 
 Conventional autonomous browser agents capture full-resolution screenshots and stream them alongside raw DOM data directly to cloud multimodal language models (VLMs). This introduces critical security and privacy vulnerabilities:
 - Plaintext passwords, session tokens, and API keys are transmitted across network boundaries.
@@ -118,7 +117,7 @@ flowchart TD
 - **Pre-Flight Privacy Firewall**: Drops network connections if an unredacted credential or PII pattern is discovered in the outbound request.
 - **Strict Agent Action Schema**: Whitelist of deterministic browser actions (`CLICK`, `SCROLL`, `FOCUS`, `TYPE`, `SELECT`, `PRESS_KEY`, `WAIT`). Rejects arbitrary JavaScript, `eval()`, or XSS injections.
 - **Ollama & Cloud VLM Support**: Native Ollama integration (`OLLAMA_BASE_URL`, `OLLAMA_MODEL`) with transparent fallback for offline demos.
-- **Judging & Benchmark Dashboard**: Built-in 9-step Judge Mode, before/after inspection viewer, network diagnostics panel, and SIH26171 evaluation scorecard.
+- **Audit & Benchmark Dashboard**: Built-in 9-step Audit Mode, before/after inspection viewer, network diagnostics panel, and real-time evaluation scorecard.
 
 ---
 
@@ -161,7 +160,7 @@ ollama run llava
 # or
 ollama run llama3.2-vision
 ```
-Ensure Ollama is running on `http://localhost:11434`. If Ollama is offline, the server seamlessly switches to transparent semantic reasoning so demos never fail during judging.
+Ensure Ollama is running on `http://localhost:11434`. If Ollama is offline, the server seamlessly switches to transparent semantic reasoning so demos never fail during testing.
 
 ---
 
@@ -169,7 +168,8 @@ Ensure Ollama is running on `http://localhost:11434`. If Ollama is offline, the 
 
 Open the **Demo Hub** in Google Chrome:
 ```
-file:///Users/sarvagyachaturvedi/Desktop/sih/demo/index.html
+http://localhost:8000/demo/
+# or open demo/index.html in Google Chrome
 ```
 
 | Demo | Scenario | Privacy Protection Demonstrated |
@@ -183,9 +183,9 @@ file:///Users/sarvagyachaturvedi/Desktop/sih/demo/index.html
 
 ---
 
-## 7. Performance Benchmarks (SIH26171 Criteria)
+## 7. Performance Benchmarks
 
-| Metric | SIH Weight | Score / Measurement |
+| Metric | Weight | Score / Measurement |
 | :--- | :---: | :--- |
 | **Accuracy of Visual Context** | **25%** | **96.5%** identifiable action affordances preserved |
 | **Sensitive Detection P / R** | **20%** | **Precision: 0.98 / Recall: 0.95 (F1: 0.96)** |

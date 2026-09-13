@@ -13,4 +13,4 @@ def test_health_endpoint():
 def test_root_endpoint():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["problem_statement"] == "SIH26171"
+    assert response.json()["service"] == "PrivacyVision Reasoning Server"

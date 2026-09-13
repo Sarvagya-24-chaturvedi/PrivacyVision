@@ -1,5 +1,5 @@
 """
-Dataset Builder for MobileViT Browser Scene Classifier (SIH26171)
+Dataset Builder for MobileViT Browser Scene Classifier
 Generates synthetic webpage screenshot training data for 6 classes:
   login, payment, form, pii, dashboard, modal
 """

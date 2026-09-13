@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PrivacyVision — On-Device Visual Browser Agent",
   "version": "2.0.0",
-  "description": "SIH26171: On-device visual perception with real face detection, universal page coverage (Google Forms, PDFs, SPAs), and trained MobileViT ONNX agent.",
+  "description": "On-device visual perception with real face detection, universal page coverage (Google Forms, PDFs, SPAs), and trained MobileViT ONNX agent.",
   "permissions": [
     "activeTab",
     "scripting",

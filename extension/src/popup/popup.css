@@ -463,7 +463,7 @@ body {
   color: #cbd5e1;
 }
 
-/* SIH Benchmark */
+/* Benchmark */
 .benchmark-header {
   display: flex;
   justify-content: space-between;
@@ -475,7 +475,7 @@ body {
   color: var(--text-secondary);
 }
 
-.sih-weights-grid {
+.weights-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;

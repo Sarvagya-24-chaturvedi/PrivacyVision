@@ -2,7 +2,7 @@
 
 ## Product overview
 
-PrivacyVision is a Chrome Manifest V3 browser extension and local FastAPI service for SIH26171, *On-device Visual Perception for Light-weight Browser Agents*. It detects sensitive values and faces on the device, sanitizes the screenshot and structural browser context, verifies the outbound payload, and only then allows an agent to reason about the page.
+PrivacyVision is a Chrome Manifest V3 browser extension and local FastAPI service for on-device visual perception and lightweight browser agents. It detects sensitive values and faces on the device, sanitizes the screenshot and structural browser context, verifies the outbound payload, and only then allows an agent to reason about the page.
 
 ## Extension client
 
