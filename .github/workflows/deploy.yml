@@ -1,0 +1,46 @@
+name: CI & Cloud Build
+
+on:
+  push:
+    branches: [ main, model-integration ]
+  pull_request:
+    branches: [ main, model-integration ]
+
+jobs:
+  test-server:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r server/requirements.txt
+      - name: Run Backend Tests
+        run: |
+          cd server
+          pytest
+
+  test-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: |
+          cd extension
+          npm ci
+      - name: Build Extension
+        run: |
+          cd extension
+          npm run build
+      - name: Run Extension Unit Tests
+        run: |
+          cd extension
+          npm test

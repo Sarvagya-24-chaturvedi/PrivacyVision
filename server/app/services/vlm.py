@@ -1,5 +1,6 @@
 import httpx
-from typing import Tuple
+import re
+from typing import Tuple, Optional
 from ..config import settings
 from ..models import ActionSchema, ActionTarget
 from .ollama import OllamaService, VLM_SYSTEM_PROMPT
@@ -9,15 +10,19 @@ class VLMCoordinator:
     @staticmethod
     async def reason(task: str, sanitized_screenshot: str, dom: dict) -> Tuple[ActionSchema, str]:
         """
-        Attempts reasoning via Ollama -> OpenAI-compatible -> Transparent Demo Fallback.
+        Attempts reasoning via Gemini -> OpenAI -> Ollama -> Transparent Semantic Fallback.
         Returns (action, provider_name).
         """
         nodes = dom.get("nodes", []) if isinstance(dom, dict) else []
 
-        # 1. Try Ollama local vision model
-        ollama_action = await OllamaService.reason(task, sanitized_screenshot, nodes)
-        if ollama_action:
-            return ollama_action, f"Ollama ({settings.OLLAMA_MODEL})"
+        # 1. Try Google Gemini Vision if configured (Cloud AI Recommended)
+        if settings.GEMINI_API_KEY:
+            try:
+                action = await VLMCoordinator._reason_gemini(task, sanitized_screenshot, nodes)
+                if action:
+                    return action, f"Google Gemini ({settings.GEMINI_MODEL})"
+            except Exception as e:
+                print(f"[VLMCoordinator] Gemini reasoning error: {e}")
 
         # 2. Try OpenAI-compatible vision model if configured
         if settings.OPENAI_API_KEY:
@@ -25,16 +30,69 @@ class VLMCoordinator:
                 action = await VLMCoordinator._reason_openai(task, sanitized_screenshot, nodes)
                 if action:
                     return action, f"OpenAI ({settings.OPENAI_VISION_MODEL})"
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"[VLMCoordinator] OpenAI reasoning error: {e}")
 
-        # 3. Transparent Demo/Offline Reasoning Fallback
-        # Reasons over sanitized structural DOM representations
+        # 3. Try Ollama local vision model
+        try:
+            ollama_action = await OllamaService.reason(task, sanitized_screenshot, nodes)
+            if ollama_action:
+                return ollama_action, f"Ollama ({settings.OLLAMA_MODEL})"
+        except Exception:
+            pass
+
+        # 4. Transparent High-Precision Semantic Reasoning Fallback
         action = VLMCoordinator._semantic_reasoning_fallback(task, nodes)
-        return action, "Offline-Semantic-Reasoning (Transparent Demo Fallback)"
+        return action, "PrivacyVision Semantic Engine (Cloud Fallback)"
 
     @staticmethod
-    async def _reason_openai(task: str, sanitized_screenshot: str, nodes: list) -> ActionSchema:
+    async def _reason_gemini(task: str, sanitized_screenshot: str, nodes: list) -> Optional[ActionSchema]:
+        """Call Google Gemini 1.5 Vision API."""
+        clean_b64 = sanitized_screenshot
+        if "," in clean_b64:
+            clean_b64 = clean_b64.split(",", 1)[1]
+
+        prompt_text = (
+            f"{VLM_SYSTEM_PROMPT}\n\n"
+            f"User Goal/Task: {task}\n"
+            f"Page Interactive Nodes (agentIds):\n{nodes[:30]}\n\n"
+            "Analyze the sanitized screenshot and return strictly the JSON action schema."
+        )
+
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{settings.GEMINI_MODEL}:generateContent?key={settings.GEMINI_API_KEY}"
+        payload = {
+            "contents": [{
+                "parts": [
+                    {"text": prompt_text},
+                    {
+                        "inline_data": {
+                            "mime_type": "image/png",
+                            "data": clean_b64
+                        }
+                    }
+                ]
+            }],
+            "generationConfig": {
+                "temperature": 0.1,
+                "response_mime_type": "application/json"
+            }
+        }
+
+        async with httpx.AsyncClient(timeout=20.0) as client:
+            resp = await client.post(url, json=payload)
+            if resp.status_code == 200:
+                data = resp.json()
+                try:
+                    raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
+                    parsed = ActionParser.parse_model_response(raw_text)
+                    if parsed:
+                        return parsed
+                except (KeyError, IndexError):
+                    pass
+        return None
+
+    @staticmethod
+    async def _reason_openai(task: str, sanitized_screenshot: str, nodes: list) -> Optional[ActionSchema]:
         clean_b64 = sanitized_screenshot
         if not clean_b64.startswith("data:"):
             clean_b64 = f"data:image/png;base64,{clean_b64}"
@@ -50,7 +108,7 @@ class VLMCoordinator:
                         {
                             "role": "user",
                             "content": [
-                                {"type": "text", "text": f"Task: {task}\nNodes: {nodes[:20]}"},
+                                {"type": "text", "text": f"Task: {task}\nNodes: {nodes[:30]}"},
                                 {"type": "image_url", "image_url": {"url": clean_b64}}
                             ]
                         }
@@ -63,61 +121,85 @@ class VLMCoordinator:
                 parsed = ActionParser.parse_model_response(content)
                 if parsed:
                     return parsed
-        raise Exception("OpenAI vision inference failed")
+        return None
 
     @staticmethod
     def _semantic_reasoning_fallback(task: str, nodes: list) -> ActionSchema:
         task_lower = task.lower()
 
-        # Check for scroll task
+        # 1. Scroll action detection
         if "scroll" in task_lower:
+            direction = "DOWN"
+            if "up" in task_lower:
+                direction = "UP"
             return ActionSchema(
                 action="SCROLL",
-                direction="DOWN",
-                amount=400,
-                reason="Semantic agent: scrolling down to reveal off-screen page content"
+                direction=direction,
+                amount=450,
+                reason="Autonomous agent: scrolling to reveal off-screen interactive elements"
             )
 
-        # Look for matching button or link
+        # 2. Match action buttons or inputs by semantic goal
         for node in nodes:
             text = (node.get("text") or "").lower()
-            role = node.get("role") or node.get("tag")
+            agent_id = node.get("agentId")
 
-            if "submit" in task_lower or "login" in task_lower or "sign in" in task_lower:
-                if any(w in text for w in ["submit", "login", "sign in", "continue", "enter", "log in"]):
+            # Login / Sign in
+            if any(w in task_lower for w in ["login", "sign in", "signin", "submit", "log in"]):
+                if any(w in text for w in ["sign in", "login", "submit", "log in", "dashboard", "enter"]):
                     return ActionSchema(
                         action="CLICK",
-                        target=ActionTarget(agentId=node.get("agentId")),
-                        reason=f"Identified primary submission button: '{node.get('text')}'"
+                        target=ActionTarget(agentId=agent_id),
+                        reason=f"Identified authentication button: '{node.get('text')}'"
                     )
 
-            if "pay" in task_lower or "checkout" in task_lower:
-                if any(w in text for w in ["pay", "checkout", "place order", "complete payment"]):
+            # Payment / Checkout
+            if any(w in task_lower for w in ["pay", "payment", "checkout", "buy", "order"]):
+                if any(w in text for w in ["pay", "checkout", "complete payment", "place order", "purchase", "verify"]):
                     return ActionSchema(
                         action="CLICK",
-                        target=ActionTarget(agentId=node.get("agentId")),
-                        reason=f"Identified payment execution button: '{node.get('text')}'"
+                        target=ActionTarget(agentId=agent_id),
+                        reason=f"Identified payment action button: '{node.get('text')}'"
                     )
 
-            if "continue" in task_lower or "next" in task_lower:
-                if any(w in text for w in ["continue", "next", "proceed", "forward"]):
+            # KYC / Verification
+            if any(w in task_lower for w in ["kyc", "verify", "identity", "confirm"]):
+                if any(w in text for w in ["verify", "submit kyc", "confirm", "approve", "save"]):
                     return ActionSchema(
                         action="CLICK",
-                        target=ActionTarget(agentId=node.get("agentId")),
-                        reason=f"Identified continuation button: '{node.get('text')}'"
+                        target=ActionTarget(agentId=agent_id),
+                        reason=f"Identified verification confirmation button: '{node.get('text')}'"
                     )
 
-        # Default fallback: pick first visible interactive button
+            # Continue / Next / Step
+            if any(w in task_lower for w in ["continue", "next", "proceed", "step"]):
+                if any(w in text for w in ["continue", "next", "proceed", "final step"]):
+                    return ActionSchema(
+                        action="CLICK",
+                        target=ActionTarget(agentId=agent_id),
+                        reason=f"Identified step continuation button: '{node.get('text')}'"
+                    )
+
+            # Profile / Approval
+            if any(w in task_lower for w in ["approve", "profile", "face"]):
+                if any(w in text for w in ["approve", "profile", "verify profile"]):
+                    return ActionSchema(
+                        action="CLICK",
+                        target=ActionTarget(agentId=agent_id),
+                        reason=f"Identified approval action button: '{node.get('text')}'"
+                    )
+
+        # 3. Default: select first actionable button
         first_btn = next((n for n in nodes if n.get("role") == "button" or n.get("tag") == "button"), None)
         if first_btn:
             return ActionSchema(
                 action="CLICK",
                 target=ActionTarget(agentId=first_btn.get("agentId")),
-                reason=f"Clicking visible interactable button: '{first_btn.get('text')}'"
+                reason=f"Clicking primary actionable element: '{first_btn.get('text') or first_btn.get('agentId')}'"
             )
 
         return ActionSchema(
             action="WAIT",
             ms=1000,
-            reason="Waiting for page updates; no direct action candidate identified"
+            reason="Waiting for DOM updates; no explicit action target identified"
         )

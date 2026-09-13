@@ -30,7 +30,7 @@
     <div class="status-bar">
       <div class="status-item">
         <span class="dot dot-active"></span>
-        <span>Local Privacy Engine: <strong class="text-success">Active</strong></span>
+        <span>Privacy Engine: <strong class="text-success">Active</strong></span>
       </div>
       <div class="status-item">
         <span class="dot" id="server-dot"></span>
@@ -39,6 +39,13 @@
       <div class="status-item">
         <span>Inference: <strong class="text-accent" id="inference-backend">WebGPU/WASM</strong></span>
       </div>
+    </div>
+
+    <!-- Cloud Endpoint Selector -->
+    <div class="endpoint-bar" id="endpoint-bar">
+      <span class="endpoint-label">Cloud / AI Endpoint:</span>
+      <input type="text" id="input-server-url" placeholder="http://localhost:8000" value="http://localhost:8000" class="endpoint-input" />
+      <button class="btn btn-secondary btn-sm" id="btn-save-endpoint">Save</button>
     </div>
 
     <!-- Navigation Tabs -->

@@ -47,9 +47,14 @@ document.addEventListener("DOMContentLoaded", () => {
         logBox.innerHTML = "";
         addLog("Logs cleared.", "info");
     });
+    const inputServerUrl = document.getElementById("input-server-url");
+    const btnSaveEndpoint = document.getElementById("btn-save-endpoint");
     // Check system status
     function checkStatus() {
         chrome.runtime.sendMessage({ type: "GET_STATUS" }, (response) => {
+            if (response?.serverUrl && inputServerUrl) {
+                inputServerUrl.value = response.serverUrl;
+            }
             if (response?.serverConnected) {
                 serverStatus.innerText = "Connected";
                 serverStatus.className = "text-success";
@@ -63,6 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     checkStatus();
+    // Save custom or cloud server URL
+    btnSaveEndpoint?.addEventListener("click", () => {
+        const newUrl = inputServerUrl.value.trim();
+        if (!newUrl) {
+            addLog("Please enter a valid backend URL", "warning");
+            return;
+        }
+        btnSaveEndpoint.disabled = true;
+        chrome.runtime.sendMessage({ type: "SET_SERVER_URL", url: newUrl }, (res) => {
+            btnSaveEndpoint.disabled = false;
+            if (res?.ok) {
+                addLog(`Backend endpoint updated to: ${res.serverUrl}`, "success");
+                checkStatus();
+            }
+            else {
+                addLog(`Failed to update endpoint: ${res?.error}`, "danger");
+            }
+        });
+    });
     // Update UI with captured context
     function updateContextUI(context) {
         const detections = context.detections || [];

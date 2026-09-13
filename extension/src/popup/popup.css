@@ -125,6 +125,47 @@ body {
   background: var(--accent-amber);
 }
 
+/* Endpoint Bar */
+.endpoint-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(13, 32, 56, 0.6);
+  border: 1px solid rgba(145, 168, 193, 0.14);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+
+.endpoint-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.endpoint-input {
+  flex: 1;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-family: monospace;
+}
+
+.endpoint-input:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 10px;
+  flex: 0 0 auto;
+}
+
 /* Navigation Tabs */
 .nav-tabs {
   display: flex;
