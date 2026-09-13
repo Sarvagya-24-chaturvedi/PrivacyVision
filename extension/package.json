@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite build --watch",
     "build": "tsc && vite build && vite build --config vite.content.config.ts",
+    "package": "npm run build && cd dist && zip -r ../../privacyvision-extension.zip .",
     "test": "vitest run",
     "test:watch": "vitest"
   },

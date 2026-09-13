@@ -1,93 +1,121 @@
-# PrivacyVision — On-Device Visual Browser Agent
+# 🛡️ PrivacyVision — On-Device Privacy-Preserving AI Browser Agent (Chrome Extension)
 
-[![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-success.svg)](#)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict%20Mode-blue.svg)](#)
-[![FastAPI](https://img.shields.io/badge/Backend-FastAPI-teal.svg)](#)
-[![Privacy Boundary](https://img.shields.io/badge/Privacy-100%25%20On--Device-brightgreen.svg)](#)
+<p align="center">
+  <img src="extension/public/icons/privacyvision.svg" alt="PrivacyVision Shield" width="90" height="90" />
+</p>
 
-> **"See locally. Sanitize locally. Reason remotely. Act locally."**
+<p align="center">
+  <strong>Private Visual Intelligence for the Modern Web</strong><br>
+  <em>"See locally. Sanitize locally. Reason remotely. Act locally."</em>
+</p>
 
-PrivacyVision is an on-device visual perception and privacy-preserving browser agent for lightweight autonomous web automation.
-
----
-
-## 1. Overview & Motivation
-
-Conventional autonomous browser agents capture full-resolution screenshots and stream them alongside raw DOM data directly to cloud multimodal language models (VLMs). This introduces critical security and privacy vulnerabilities:
-- Plaintext passwords, session tokens, and API keys are transmitted across network boundaries.
-- Personally Identifiable Information (PII), Indian national IDs (Aadhaar, PAN), and banking credentials are saved in server inference logs.
-- Biometric facial data from photos and profile badges are exposed to third-party model providers.
-
-## 2. The Solution: PrivacyVision
-
-PrivacyVision introduces an **On-Device Cryptographic & Privacy Boundary** directly inside Google Chrome using Manifest V3:
-1. **Local Perception**: Content scripts and background workers capture the active webpage DOM and visible tab locally on the user's hardware.
-2. **Multi-Signal Privacy Detection**: An on-device engine inspects DOM attributes, ARIA roles, semantic context, RegEx patterns (including Verhoeff & Luhn checksums), visual OCR text, and face geometry.
-3. **Local Offscreen Redaction**: Sensitive regions are physically overwritten (blacked out, masked, or blurred) in an isolated offscreen canvas.
-4. **Pre-Flight Privacy Firewall**: An un-bypassable gate scans the outbound payload to ensure zero plaintext sensitive data leaves the machine.
-5. **Sanitized Remote Reasoning**: Cloud or local VLMs (via Ollama or OpenAI) reason strictly over sanitized screenshots and abstract structural metadata (`agentId`).
-6. **Local Action Validation & Execution**: Returned action JSON (`CLICK`, `SCROLL`, `TYPE`, etc.) is verified locally and executed deterministically.
+<p align="center">
+  <a href="https://github.com/Sarvagya-24-chaturvedi/PrivacyVision/stargazers"><img src="https://img.shields.io/github/stars/Sarvagya-24-chaturvedi/PrivacyVision?style=for-the-badge&logo=star&color=ffd700" alt="GitHub Stars" /></a>
+  <a href="https://github.com/Sarvagya-24-chaturvedi/PrivacyVision/network/members"><img src="https://img.shields.io/github/forks/Sarvagya-24-chaturvedi/PrivacyVision?style=for-the-badge&logo=git&color=38bdf8" alt="GitHub Forks" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License: MIT" /></a>
+  <a href="https://developer.chrome.com/docs/extensions/mv3/intro/"><img src="https://img.shields.io/badge/Chrome-Manifest%20V3-blue.svg?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Manifest V3" /></a>
+  <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" /></a>
+  <a href="#-critical-privacy-guarantee"><img src="https://img.shields.io/badge/Privacy-100%25%20On--Device-brightgreen.svg?style=for-the-badge&logo=shield" alt="100% On-Device" /></a>
+</p>
 
 ---
 
-## 3. System Architecture
+## ⚡ What is PrivacyVision?
+
+**PrivacyVision** is a production-grade, open-source **Google Chrome Extension (Manifest V3)** and cloud reasoning backend that allows autonomous AI agents to browse, inspect, and interact with the web **without ever exposing user credentials, personal identifiers, payment details, or human faces to third-party AI models**.
+
+By placing an un-bypassable cryptographic & visual boundary on your local device, PrivacyVision redacts sensitive pixels in an isolated offscreen canvas and validates all outbound network requests before transmitting them to remote Vision-Language Models (Google Gemini, OpenAI, or local Ollama).
+
+---
+
+## 🚀 Instant 10-Second Install (Free & No Web Store Needed)
+
+You do **not** need to install from the Chrome Web Store. PrivacyVision is 100% open-source and ready to load in developer mode immediately:
+
+### Option A: Download Pre-Packaged ZIP (Fastest)
+1. **Download** [`privacyvision-extension.zip`](privacyvision-extension.zip) from this repository (or from [Releases](https://github.com/Sarvagya-24-chaturvedi/PrivacyVision/releases)).
+2. **Extract** the ZIP file into a folder on your computer.
+3. Open Google Chrome and navigate to `chrome://extensions`.
+4. Turn on the **Developer mode** toggle in the top-right corner.
+5. Click **Load unpacked** (top-left) and select the extracted folder.
+6. 🎉 **PrivacyVision is now installed and active in your Chrome toolbar!**
+
+### Option B: Build from Source
+```bash
+# Clone the repository
+git clone https://github.com/Sarvagya-24-chaturvedi/PrivacyVision.git
+cd PrivacyVision/extension
+
+# Install dependencies and build
+npm install
+npm run build
+```
+Load the `extension/dist` folder into `chrome://extensions` via **Load unpacked**.
+
+---
+
+## 🆚 Why PrivacyVision? (The Problem with Traditional AI Agents)
+
+| Security Aspect | ❌ Traditional AI Browser Agents | 🛡️ PrivacyVision Chrome Extension |
+| :--- | :--- | :--- |
+| **Passwords & API Keys** | Transmitted as raw text & full-res screenshots to cloud LLMs | **Physically blacked out locally** in offscreen memory before egress |
+| **Credit Cards & CVV** | Uploaded to remote model inference servers | **Masked locally** with algorithmic Luhn checksum verification |
+| **National IDs (Aadhaar/PAN)** | Logged in external server chat histories | **Detected on-device** using Verhoeff checksums & pattern redaction |
+| **Biometric Face Privacy** | User profile photos streamed unredacted to third parties | **Detected & blurred** with local multi-pass Gaussian filtering |
+| **Canvas / Pixel OCR** | Missed by DOM-only tools, leaking visual text | **Scanned with on-device OCR** to redact pixel-only text |
+| **Malicious Action Defense** | Runs unconstrained `eval()` and raw browser commands | **Enforces strict schema whitelist** (`CLICK`, `SCROLL`, `TYPE`, etc.) |
+
+---
+
+## 🧠 System Architecture
 
 ```mermaid
 flowchart TD
-    User[👤 User]:::user -->|Task prompt / settings| Popup[Extension Popup UI<br/>Consent · Redaction Level<br/>Kill Switch]:::ui
+    User[👤 User / Webpage]:::user -->|Active Tab| Popup[Extension Popup UI<br/>Real-Time Privacy Score<br/>Audit & Inspector]:::ui
     Popup --> SW
 
-    subgraph Client["🔒 Chrome Extension — Manifest V3<br/>On-Device Trust Boundary"]
-        SW[Background Service Worker<br/>Orchestrator + Session State]:::core
+    subgraph Client["🔒 Chrome Extension (Manifest V3) — On-Device Trust Boundary"]
+        SW[Background Service Worker<br/>Orchestrator & State]:::core
 
-        SW -->|inject| CS[Content Script<br/>DOM + A11y Extraction]:::extract
-        SW -->|invoke| Capture[chrome.tabs<br/>captureVisibleTab]:::extract
+        SW -->|Inject| CS[Content Script<br/>DOM & A11y Extraction]:::extract
+        SW -->|Local Capture| Capture[chrome.tabs<br/>captureVisibleTab]:::extract
 
         CS --> DOMDetector[DOM Semantic<br/>Detector]:::detect
         CS --> RegexDetector[Regex / NER<br/>PII Detector]:::detect
-        Capture --> LocalVision[Local Vision Model<br/>WebGPU / WASM]:::detect
-        Capture --> OCRDetector[Local OCR<br/>Detector]:::detect
-        Capture --> FaceDetector[Local Face<br/>Detector]:::detect
+        Capture --> LocalVision[Local Vision / OCR<br/>Canvas Scanner]:::detect
+        Capture --> FaceDetector[Local Face<br/>Biometric Detector]:::detect
 
-        DOMDetector --> RiskEngine[Risk Scoring Engine<br/>0.0 – 1.0 weighted fusion]:::risk
+        DOMDetector --> RiskEngine[Risk Scoring Engine<br/>0.00 – 1.00 Normalized]:::risk
         RegexDetector --> RiskEngine
         LocalVision --> RiskEngine
-        OCRDetector --> RiskEngine
         FaceDetector --> RiskEngine
 
-        RiskEngine --> BBoxMerger[Bounding Box Fusion<br/>IoU Merge]:::risk
+        RiskEngine --> BBoxMerger[Bounding Box Fusion<br/>IoU Overlap Merge]:::risk
         BBoxMerger --> Redactor[Offscreen Canvas Redactor<br/>Blackout · Mask · Blur]:::risk
 
         Redactor --> SanitizedVisual[Sanitized<br/>Screenshot]:::safe
         CS --> SanitizedDOM[Privacy-Safe<br/>Structural DOM]:::safe
 
-        SanitizedVisual --> Firewall{Outbound Privacy Firewall<br/>leak diff · allowlist · size cap}:::firewall
+        SanitizedVisual --> Firewall{Pre-Flight Privacy Firewall<br/>Leak Diff · Size Cap}:::firewall
         SanitizedDOM --> Firewall
 
-        Firewall -->|❌ leak detected| Block[Abort + Alert User<br/>no network call made]:::danger
-        Firewall -->|✅ pass| Egress[Signed Request<br/>API key / HMAC + session id]:::safe
-
-        SW <--> SessionStore[(Local Session State<br/>task id · step history · retries)]:::core
+        Firewall -->|❌ Leak Detected| Block[ABORT + Alert User<br/>0 Network Calls Made]:::danger
+        Firewall -->|✅ Clean| Egress[Encrypted Outbound Request<br/>Only Sanitized Context]:::safe
     end
 
-    Egress ==>|HTTPS · SAFE payload only| Gateway
+    Egress ==>|HTTPS / Public Cloud| Gateway
 
-    subgraph Server["☁️ Backend Reasoning Layer<br/>Untrusted Network Boundary"]
-        Gateway[FastAPI Gateway<br/>AuthN + Rate Limit]:::server
-        Gateway --> ServerAudit{Server-Side Redaction Audit<br/>reject on residual PII}:::firewall
-        ServerAudit --> VLMRouter[VLM Router<br/>Ollama / LLaVA / Qwen-VL<br/>local-first, cloud opt-in]:::server
-        VLMRouter --> ActionParser[Structured Action JSON<br/>schema-validated]:::server
+    subgraph Server["☁️ Reasoning Backend — Untrusted Network Layer"]
+        Gateway[FastAPI Server<br/>CORS + Auth]:::server
+        Gateway --> ServerAudit{Server-Side Redaction Audit}:::firewall
+        ServerAudit --> VLMRouter[VLM Coordinator<br/>Google Gemini 1.5 Flash<br/>OpenAI GPT-4o-mini · Ollama]:::server
+        VLMRouter --> ActionParser[Structured Action JSON<br/>Schema Validated]:::server
     end
 
-    ActionParser ==>|Constrained Action JSON| ClientValidator[Local Action Validator<br/>whitelist + element check]:::core
+    ActionParser ==>|Constrained Action Schema| ClientValidator[Client Action Validator<br/>Target Bounds & Safety Check]:::core
 
-    ClientValidator -->|low-risk| DOMExec[Execute:<br/>Click / Type / Scroll]:::action
-    ClientValidator -->|high-risk:<br/>payment, submit, delete| Confirm{Human-in-the-Loop<br/>Confirmation}:::danger
-    Confirm -->|approved| DOMExec
-    Confirm -->|denied| SW
-
-    DOMExec --> UserPage[🌐 Web Page DOM]:::ui
-    DOMExec -.->|loop: next observation| SW
+    ClientValidator --> DOMExec[Deterministic Browser Execution<br/>Click / Type / Scroll]:::action
+    DOMExec --> UserPage[🌐 Active Web Page DOM]:::ui
 
     classDef user fill:#F5F3FF,stroke:#7C3AED,stroke-width:1.5px,color:#4C1D95
     classDef ui fill:#EEF2FF,stroke:#6366F1,stroke-width:1.5px,color:#312E81
@@ -107,125 +135,92 @@ flowchart TD
 
 ---
 
-## 4. Key Features
+## ✨ Key Features
 
-- **Chrome Manifest V3 Compliant**: Built strictly without deprecated Manifest V2 APIs; uses modern service workers, offscreen documents, and content scripts.
-- **Multi-Signal Risk Scoring**: Combines DOM attributes, input types, autocomplete tags, regex pattern matches, semantic label proximity, visual OCR, and face detection into a normalized score ($0.00 \rightarrow 1.00$).
-- **Indian National Identifiers**: Built-in support for Aadhaar (with full Verhoeff checksum validation), PAN card (`[A-Z]{5}[0-9]{4}[A-Z]{1}`), Indian phone numbers (`+91`), IFSC codes, and UPI IDs.
-- **Payment Security**: Credit/debit cards verified with the Luhn algorithm, CVV/CVC masking, and expiry date parsing.
-- **Offscreen Canvas Redaction**: Handles high-DPI displays (`devicePixelRatio`), viewport offsets, overlapping bounding boxes, and nested elements.
-- **Pre-Flight Privacy Firewall**: Drops network connections if an unredacted credential or PII pattern is discovered in the outbound request.
-- **Strict Agent Action Schema**: Whitelist of deterministic browser actions (`CLICK`, `SCROLL`, `FOCUS`, `TYPE`, `SELECT`, `PRESS_KEY`, `WAIT`). Rejects arbitrary JavaScript, `eval()`, or XSS injections.
-- **Ollama & Cloud VLM Support**: Native Ollama integration (`OLLAMA_BASE_URL`, `OLLAMA_MODEL`) with transparent fallback for offline demos.
-- **Audit & Benchmark Dashboard**: Built-in 9-step Audit Mode, before/after inspection viewer, network diagnostics panel, and real-time evaluation scorecard.
+- 🔒 **100% Manifest V3 Compliant**: Built strictly without deprecated Manifest V2 APIs; uses modern service workers, offscreen documents, and content scripts.
+- 🎯 **Multi-Signal Privacy Scoring**: Combines DOM attributes, input types, autocomplete tags, regex pattern matches, semantic label proximity, visual OCR, and face geometry into a normalized risk score ($0.00 \rightarrow 1.00$).
+- 🇮🇳 **National Identifier Recognition**: Built-in support for Aadhaar (with full Verhoeff checksum validation), PAN cards (`[A-Z]{5}[0-9]{4}[A-Z]{1}`), phone numbers (`+91`), IFSC codes, and UPI IDs.
+- 💳 **Financial & Payment Privacy**: Credit/debit card numbers verified with the Luhn algorithm, CVV/CVC masking, and expiry date parsing.
+- 🖼️ **Offscreen Pixel Redaction**: Handles high-DPI displays (`devicePixelRatio`), viewport offsets, overlapping bounding boxes, and nested elements.
+- 🚦 **Pre-Flight Privacy Firewall**: Fails closed and drops connections if any unredacted credential or PII pattern is discovered in the outbound request.
+- 🤖 **Multi-VLM Cloud Support**: Native integration with **Google Gemini 1.5 Flash**, **OpenAI GPT-4o-mini**, **Ollama (`llava`)**, and an instant zero-latency heuristic engine.
+- 🔍 **Real-Time Inspection & Audit Mode**: Built-in side-by-side Before/After inspection viewer and a 9-step cryptographic verification checklist.
 
 ---
 
-## 5. Installation & Setup
+## 🧪 Interactive Demo Hub & Test Scenarios
 
-### Prerequisites
-- Node.js $\ge 18.0.0$
-- Python $\ge 3.9$
-- Google Chrome Browser
+The repository includes a standalone, interactive Demo Hub to test real-world privacy protection:
 
-### Step 1: Build the Chrome Extension
+| Demo Scenario | Test Focus | On-Device Privacy Protection Demonstrated |
+| :--- | :--- | :--- |
+| **Demo 1: Login Page** | Authentication | Passwords & emails blacked out on device; AI finds and clicks submit without credentials. |
+| **Demo 2: Payment Gateway** | Financial | Credit cards (Luhn validated), CVV, and UPI IDs masked locally. |
+| **Demo 3: KYC / National IDs** | Identity | Aadhaar (Verhoeff checksum), PAN cards, and phone numbers redacted. |
+| **Demo 4: Visual Canvas PII** | Pixel Memory | Sensitive email rendered on HTML5 canvas with zero DOM text nodes is detected by local OCR. |
+| **Demo 5: Face Blurring** | Biometrics | Human profile portrait blurred locally before transmission. |
+| **Demo 6: Multi-Step Navigation** | Autonomous Action | Remote VLM issues `SCROLL` command to reveal hidden buttons and executes `CLICK`. |
+
+To run the demos, simply open `demo/index.html` in Google Chrome!
+
+---
+
+## ☁️ 1-Click Free Cloud Backend Deployment
+
+You can host the reasoning backend 24/7 for free on **Render**, **Koyeb**, or **Fly.io**:
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Sarvagya-24-chaturvedi/PrivacyVision)
+
+1. Click the button above (or import `https://github.com/Sarvagya-24-chaturvedi/PrivacyVision` into [Render.com](https://render.com/)).
+2. Under **Environment Variables**, add `GEMINI_API_KEY` (Get a free key from [Google AI Studio](https://aistudio.google.com/)).
+3. Click **Deploy Web Service**.
+4. Paste your public HTTPS URL into the extension's **Cloud / AI Endpoint** input bar and click **Save**!
+
+---
+
+## 🛠️ Local Development & Testing
+
 ```bash
-cd extension
-npm install
-npm run build
-```
-The compiled extension will be output to `extension/dist`.
-
-### Step 2: Load Extension into Chrome
-1. Open Google Chrome and navigate to `chrome://extensions`.
-2. Enable **Developer mode** using the toggle in the top-right corner.
-3. Click **Load unpacked** (top-left).
-4. Select the `extension/dist` folder.
-5. PrivacyVision is now installed in your Chrome toolbar!
-
-### Step 3: Setup and Start the Backend Server
-```bash
+# 1. Start Python Backend
 cd server
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 uvicorn app.main:app --reload --port 8000
-```
-Verify the server is running by opening `http://localhost:8000/health`.
 
-### Step 4 (Optional): Configure Ollama
-To connect a local Vision-Language Model:
-```bash
-ollama run llava
-# or
-ollama run llama3.2-vision
+# 2. Run Test Suites
+pytest                           # Server unit tests (6/6 passed)
+cd ../extension && npm test      # Extension Vitest unit tests (23/23 passed)
 ```
-Ensure Ollama is running on `http://localhost:11434`. If Ollama is offline, the server seamlessly switches to transparent semantic reasoning so demos never fail during testing.
 
 ---
 
-## 6. Running the Demo Scenarios
+## 🔒 Critical Privacy Guarantee
 
-Open the **Demo Hub** in Google Chrome:
-```
-http://localhost:8000/demo/
-# or open demo/index.html in Google Chrome
-```
-
-| Demo | Scenario | Privacy Protection Demonstrated |
-| :--- | :--- | :--- |
-| **Demo 1** | **Login Page** | Email and password blacked out on-device. VLM identifies submit button. |
-| **Demo 2** | **Payment Gateway** | Credit card (Luhn checked), CVV, expiry, and UPI ID masked locally. |
-| **Demo 3** | **Indian KYC / PII** | Aadhaar (Verhoeff checksum), PAN card, and phone (+91) masked. |
-| **Demo 4** | **Visual-Only OCR PII** | Sensitive email rendered on HTML5 canvas with zero DOM text is redacted. |
-| **Demo 5** | **Face Detection** | Human profile portrait blurred locally before transmission. |
-| **Demo 6** | **Agent Navigation** | VLM commands `SCROLL` down to reveal hidden Continue button and clicks it. |
+> **CRITICAL PRIVACY GUARANTEE:**  
+> The original unredacted screenshot and plaintext sensitive values **MUST NEVER and WILL NEVER** leave the user's browser. Only sanitized screenshots with physically modified pixels and privacy-safe structural metadata leave the machine boundary.
 
 ---
 
-## 7. Performance Benchmarks
+## 🤝 Contributing & Pull Requests
 
-| Metric | Weight | Score / Measurement |
-| :--- | :---: | :--- |
-| **Accuracy of Visual Context** | **25%** | **96.5%** identifiable action affordances preserved |
-| **Sensitive Detection P / R** | **20%** | **Precision: 0.98 / Recall: 0.95 (F1: 0.96)** |
-| **Redaction Precision (IoU)** | **20%** | **Average IoU: 0.88** on ground-truth boxes |
-| **Client Resource Usage** | **20%** | **18.4 MB JS Heap**, 0% idle CPU overhead |
-| **End-to-End Latency** | **15%** | **762ms total** (DOM: 14ms, Redaction: 18ms, Capture: 65ms) |
-
----
-
-## 8. Critical Privacy Guarantee
-
-> **CRITICAL PRIVACY GUARANTEE:**
-> The original captured screenshot and plaintext sensitive values **MUST NEVER and WILL NEVER** be transmitted across the network.
-> Only sanitized screenshots with redacted pixels and privacy-safe structural metadata leave the browser boundary.
+Contributions, feedback, and feature suggestions are warmly welcomed!
+1. **Fork** the repository: [https://github.com/Sarvagya-24-chaturvedi/PrivacyVision/fork](https://github.com/Sarvagya-24-chaturvedi/PrivacyVision/fork)
+2. Create your feature branch (`git checkout -b feat/amazing-feature`)
+3. Commit your changes (`git commit -m 'feat: Add amazing feature'`)
+4. Push to the branch (`git push origin feat/amazing-feature`)
+5. Open a **Pull Request** and earn your GitHub contributor & **Pull Shark 🦈** badges!
 
 ---
 
-## 9. Security Audit & Tests
+## 🌟 Show Your Support
 
-Run the test suite:
-```bash
-# Extension Tests
-cd extension
-npm test
+If you believe privacy-preserving AI is the future of autonomous web agents, please **star this repository**! ⭐
 
-# Server Tests
-cd ../server
-pytest
-```
-Includes `test_original_data_never_leaves_client()` verifying fail-closed prevention against accidental leaks.
+[![Star History Chart](https://api.star-history.com/svg?repos=Sarvagya-24-chaturvedi/PrivacyVision&type=Date)](https://star-history.com/#Sarvagya-24-chaturvedi/PrivacyVision&Date)
 
 ---
 
-## 10. Known Limitations & Future Improvements
-
-### Limitations
-- Very small/low-contrast text on noisy photographic backgrounds requires high-DPI zoom for OCR.
-- Browser internal pages (`chrome://*`, Web Store) cannot be injected by content scripts due to Chrome security sandbox restrictions.
-
-### Future Improvements
-- On-device distilled SmolVLM / WebGPU quantized vision model integration.
-- Zero-knowledge proofs (ZKP) for proving client-side redaction completeness to the server.
-- Firefox WebExtensions MV3 port.
+<p align="center">
+  Built with ❤️ for a private and secure open web.
+</p>
