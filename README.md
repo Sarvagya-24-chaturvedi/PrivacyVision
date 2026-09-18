@@ -15,7 +15,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License: MIT" /></a>
   <a href="https://developer.chrome.com/docs/extensions/mv3/intro/"><img src="https://img.shields.io/badge/Chrome-Manifest%20V3-blue.svg?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Manifest V3" /></a>
   <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" /></a>
-  <a href="whitepaper.html"><img src="https://img.shields.io/badge/Documentation-Interactive%20HTML%20%26%20PDF-0284c7.svg?style=for-the-badge&logo=googledocs&logoColor=white" alt="Project Documentation" /></a>
+  <a href="https://sarvagya-24-chaturvedi.github.io/PrivacyVision/"><img src="https://img.shields.io/badge/Live%20Documentation-Interactive%20Web%20%26%20PDF-0284c7.svg?style=for-the-badge&logo=googledocs&logoColor=white" alt="Live Documentation" /></a>
   <a href="#-critical-privacy-guarantee"><img src="https://img.shields.io/badge/Privacy-100%25%20On--Device-brightgreen.svg?style=for-the-badge&logo=shield" alt="100% On-Device" /></a>
 </p>
 
@@ -27,8 +27,10 @@
 
 By placing an un-bypassable cryptographic & visual boundary on your local device, PrivacyVision redacts sensitive pixels in an isolated offscreen canvas and validates all outbound network requests before transmitting them to remote Vision-Language Models (Google Gemini, OpenAI, or local Ollama).
 
-> 📄 **System Documentation & Executive PDF:**  
-> Looking for detailed architectural schematics, mathematical checksum algorithms, literature reviews, and benchmark telemetry? Open [**`whitepaper.html`**](whitepaper.html) in your browser. It includes 1-click export to an executive PDF formatted to prevent page-break card splits. Technical markdown is also available at [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md).
+> 🌐 **Public Live Documentation & Executive PDF:**  
+> Anyone can view the complete interactive project documentation, architectural flowcharts, and download the executive PDF online at:  
+> 👉 **[https://sarvagya-24-chaturvedi.github.io/PrivacyVision/](https://sarvagya-24-chaturvedi.github.io/PrivacyVision/)**  
+> *(Also available locally at [`whitepaper.html`](whitepaper.html) and in markdown at [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md))*
 
 ---
 
