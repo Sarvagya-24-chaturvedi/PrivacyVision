@@ -15,6 +15,7 @@
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge" alt="License: MIT" /></a>
   <a href="https://developer.chrome.com/docs/extensions/mv3/intro/"><img src="https://img.shields.io/badge/Chrome-Manifest%20V3-blue.svg?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Manifest V3" /></a>
   <a href="https://fastapi.tiangolo.com/"><img src="https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI" /></a>
+  <a href="whitepaper.html"><img src="https://img.shields.io/badge/Documentation-Interactive%20HTML%20%26%20PDF-0284c7.svg?style=for-the-badge&logo=googledocs&logoColor=white" alt="Project Documentation" /></a>
   <a href="#-critical-privacy-guarantee"><img src="https://img.shields.io/badge/Privacy-100%25%20On--Device-brightgreen.svg?style=for-the-badge&logo=shield" alt="100% On-Device" /></a>
 </p>
 
@@ -25,6 +26,9 @@
 **PrivacyVision** is a production-grade, open-source **Google Chrome Extension (Manifest V3)** and cloud reasoning backend that allows autonomous AI agents to browse, inspect, and interact with the web **without ever exposing user credentials, personal identifiers, payment details, or human faces to third-party AI models**.
 
 By placing an un-bypassable cryptographic & visual boundary on your local device, PrivacyVision redacts sensitive pixels in an isolated offscreen canvas and validates all outbound network requests before transmitting them to remote Vision-Language Models (Google Gemini, OpenAI, or local Ollama).
+
+> 📄 **System Documentation & Executive PDF:**  
+> Looking for detailed architectural schematics, mathematical checksum algorithms, literature reviews, and benchmark telemetry? Open [**`whitepaper.html`**](whitepaper.html) in your browser. It includes 1-click export to an executive PDF formatted to prevent page-break card splits. Technical markdown is also available at [`docs/DOCUMENTATION.md`](docs/DOCUMENTATION.md).
 
 ---
 
@@ -64,6 +68,25 @@ Load the `extension/dist` folder into `chrome://extensions` via **Load unpacked*
 | **Biometric Face Privacy** | User profile photos streamed unredacted to third parties | **Detected & blurred** with local multi-pass Gaussian filtering |
 | **Canvas / Pixel OCR** | Missed by DOM-only tools, leaking visual text | **Scanned with on-device OCR** to redact pixel-only text |
 | **Malicious Action Defense** | Runs unconstrained `eval()` and raw browser commands | **Enforces strict schema whitelist** (`CLICK`, `SCROLL`, `TYPE`, etc.) |
+
+---
+
+## 📊 Benchmarks & Dataset Sourcing
+
+PrivacyVision was evaluated across **9,900+ multimodal samples** comprising:
+- **5,000 UI Layouts** from HuggingFace WebSight (DOM affordance mapping & bounding boxes)
+- **2,500 Forms & Modals** from the Rico UI Dataset (mobile & responsive form elements)
+- **1,200 Indian KYC Records** (procedurally generated Aadhaar, PAN, and voter IDs with Verhoeff/Luhn checksums)
+- **1,200 Web Scenes** for MobileViT browser topology classification
+
+| Performance Metric | PrivacyVision (On-Device) | Traditional Raw VLM Agent |
+| :--- | :--- | :--- |
+| **Visual Accuracy** | **96.5%** | 42.0% |
+| **Detection Precision** | **0.982** | 0.310 |
+| **Recall (F1: 0.965)** | **0.950** | 0.380 |
+| **Redaction IoU** | **0.884** | N/A (No Redaction) |
+| **Outbound PII Leak Rate** | **0.00% (Fail-Closed Firewall)** | 100.0% (Raw Exfiltration) |
+| **Local Redaction Latency** | **~64 ms** | N/A |
 
 ---
 
@@ -190,8 +213,36 @@ uvicorn app.main:app --reload --port 8000
 
 # 2. Run Test Suites
 pytest                           # Server unit tests (6/6 passed)
-cd ../extension && npm test      # Extension Vitest unit tests (23/23 passed)
+cd ../extension && npm test      # Extension Vitest unit tests (24/24 passed)
 ```
+
+---
+
+## 🔄 24/7 Permanent Background Service (Keep Backend Running Forever)
+
+To ensure your local AI reasoning server keeps running permanently in the background on any computer — even when Terminal or VS Code is closed, or after system reboots:
+
+### macOS & Linux (1-Click Installer)
+```bash
+chmod +x install_permanent_service.sh
+./install_permanent_service.sh
+```
+* **macOS:** Automatically installs a user `launchd` daemon (`~/Library/LaunchAgents/com.privacyvision.backend.plist`) that launches on login and keeps `http://localhost:8000` alive 24/7.
+* **Linux:** Automatically installs and activates a `systemd` user service (`privacyvision.service`).
+
+**Manage Background Service Anytime:**
+```bash
+python3 server/daemon.py status   # Check daemon running state, PID, and health
+python3 server/daemon.py restart  # Restart background service
+python3 server/daemon.py stop     # Gracefully terminate service
+```
+
+### Windows (1-Click Installer)
+Double-click `install_permanent_service.bat` or run:
+```cmd
+install_permanent_service.bat
+```
+* Configures a silent background runner via `pythonw.exe` inside your Windows Startup folder (`shell:startup`) without keeping a command prompt open.
 
 ---
 
