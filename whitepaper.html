@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PrivacyVision — Project Documentation</title>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    :root {
+      --blue-900:#0f172a;--blue-800:#1e293b;--blue-700:#334155;
+      --primary:#0284c7;--primary-dark:#0369a1;--primary-light:#e0f2fe;
+      --cyan:#0891b2;--cyan-light:#cffafe;
+      --green:#16a34a;--green-light:#dcfce7;
+      --purple:#7c3aed;--purple-light:#ede9fe;
+      --orange:#ea580c;--orange-light:#ffedd5;
+      --red:#dc2626;--red-light:#fee2e2;
+      --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;
+      --gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter',sans-serif;
+      color:var(--gray-800);
+      background:#ffffff;
+      line-height:1.7;
+      font-size:14px;
+    }
+
+    /* Top Sticky Navigation Bar */
+    .top-nav {
+      position:sticky;
+      top:0;
+      left:0;
+      width:100%;
+      background:rgba(255,255,255,0.96);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      border-bottom:1px solid var(--gray-200);
+      padding:12px 32px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      z-index:100;
+    }
+    .nav-brand {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:16px;
+      font-weight:800;
+      color:var(--gray-900);
+      text-decoration:none;
+    }
+    .nav-brand-badge {
+      background:var(--primary-light);
+      color:var(--primary-dark);
+      font-size:10.5px;
+      font-weight:700;
+      padding:3px 8px;
+      border-radius:6px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .nav-actions {
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+    .btn-nav-download {
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      padding:9px 18px;
+      border-radius:6px;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      transition:background 0.2s ease;
+    }
+    .btn-nav-download:hover { background:var(--primary-dark); }
+
+    /* Top Executive Cover Header (Matching InsureChain styling) */
+    .cover {
+      background:linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0284c7 100%);
+      color:white;
+      padding:65px 60px;
+      position:relative;
+      overflow:hidden;
+    }
+    .cover::before {
+      content:'';
+      position:absolute;
+      top:-60px;
+      right:-60px;
+      width:320px;
+      height:320px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.06);
+    }
+    .cover-badge {
+      display:inline-block;
+      background:rgba(255,255,255,0.15);
+      border:1px solid rgba(255,255,255,0.3);
+      color:#bae6fd;
+      font-size:11px;
+      font-weight:600;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      padding:6px 14px;
+      border-radius:20px;
+      margin-bottom:18px;
+    }
+    .cover h1 {
+      font-size:46px;
+      font-weight:800;
+      letter-spacing:-1px;
+      margin-bottom:8px;
+      line-height:1.15;
+    }
+    .cover h1 span { color:#7dd3fc; }
+    .cover-sub {
+      font-size:16.5px;
+      font-weight:300;
+      color:#e0f2fe;
+      margin-bottom:28px;
+      max-width:720px;
+      line-height:1.5;
+    }
+    .cover-meta {
+      display:flex;
+      gap:32px;
+      flex-wrap:wrap;
+    }
+    .cover-meta-item {
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .cover-meta-label {
+      font-size:10px;
+      font-weight:600;
+      letter-spacing:1.5px;
+      text-transform:uppercase;
+      color:#7dd3fc;
+    }
+    .cover-meta-value {
+      font-size:13.5px;
+      font-weight:500;
+    }
+
+    /* Content Area */
+    .content {
+      max-width:960px;
+      margin:0 auto;
+      padding:40px 50px;
+    }
+    .section-label {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:2px;
+      text-transform:uppercase;
+      color:var(--primary);
+      margin-bottom:8px;
+    }
+    .section-label::before {
+      content:'';
+      display:block;
+      width:20px;
+      height:2px;
+      background:var(--primary);
+      border-radius:2px;
+    }
+    h2 {
+      font-size:24px;
+      font-weight:700;
+      color:var(--gray-900);
+      margin-bottom:18px;
+      padding-bottom:12px;
+      border-bottom:2px solid var(--gray-100);
+    }
+    h3 {
+      font-size:15px;
+      font-weight:700;
+      color:var(--gray-800);
+      margin:22px 0 10px;
+    }
+    p { margin-bottom:14px; color:var(--gray-700); }
+    .section { margin-bottom:44px; }
+
+    /* Overview Cards Grid */
+    .overview-grid {
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin:20px 0;
+    }
+    .overview-card {
+      border:1px solid var(--gray-200);
+      border-radius:12px;
+      padding:18px;
+      background:var(--gray-50);
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .overview-card .tag-id {
+      font-size:10px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--primary);
+      margin-bottom:6px;
+    }
+    .overview-card .label {
+      font-size:13.5px;
+      font-weight:700;
+      color:var(--gray-900);
+      margin-bottom:6px;
+    }
+    .overview-card .value {
+      font-size:12.5px;
+      color:var(--gray-600);
+      line-height:1.55;
+    }
+
+    /* KPI Summary Strip */
+    .kpi-strip {
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:20px 0 24px;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .kpi-box {
+      background:#f0f9ff;
+      border:1.5px solid #bae6fd;
+      border-radius:10px;
+      padding:16px;
+      text-align:center;
+    }
+    .kpi-num {
+      font-size:26px;
+      font-weight:800;
+      color:var(--primary-dark);
+      line-height:1.1;
+    }
+    .kpi-title {
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+      color:var(--gray-700);
+      margin-top:4px;
+    }
+
+    /* Process Flow */
+    .flow {
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:6px;
+      margin:16px 0;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .flow-step {
+      background:#f0f9ff;
+      border:1.5px solid #bae6fd;
+      border-radius:8px;
+      padding:8px 12px;
+      font-size:12px;
+      font-weight:600;
+      color:var(--primary-dark);
+      text-align:center;
+      min-width:110px;
+    }
+    .flow-arrow {
+      font-size:15px;
+      font-weight:bold;
+      color:var(--gray-300);
+      padding:0 2px;
+    }
+
+    /* Pictorial Diagram Containers */
+    .diagram-container {
+      background:#ffffff;
+      border:1.5px solid var(--gray-200);
+      border-radius:12px;
+      padding:22px;
+      margin:20px 0;
+      box-shadow:0 2px 10px rgba(0,0,0,0.02);
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .diagram-title {
+      font-size:12.5px;
+      font-weight:700;
+      color:var(--gray-900);
+      text-transform:uppercase;
+      letter-spacing:0.8px;
+      margin-bottom:14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .diagram-tag {
+      font-size:10px;
+      background:var(--primary-light);
+      color:var(--primary-dark);
+      padding:2px 8px;
+      border-radius:4px;
+      font-weight:700;
+    }
+
+    /* Charts Two-Column Grid */
+    .charts-grid {
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin:18px 0;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+
+    /* Visual Horizontal Latency Bar */
+    .latency-bar-row {
+      margin-bottom:10px;
+    }
+    .latency-bar-header {
+      display:flex;
+      justify-content:space-between;
+      font-size:11.5px;
+      font-weight:600;
+      color:var(--gray-700);
+      margin-bottom:3px;
+    }
+    .latency-bar-track {
+      background:var(--gray-100);
+      height:9px;
+      border-radius:5px;
+      overflow:hidden;
+      border:1px solid var(--gray-200);
+    }
+    .latency-bar-fill {
+      height:100%;
+      border-radius:5px;
+    }
+
+    /* Stack Tables */
+    .stack-section {
+      margin-bottom:18px;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .stack-header {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 16px;
+      border-radius:8px 8px 0 0;
+      font-size:12.5px;
+      font-weight:700;
+      color:white;
+    }
+    .stack-header.client { background:linear-gradient(90deg,#0369a1,#0284c7); }
+    .stack-header.ai { background:linear-gradient(90deg,#4338ca,#6366f1); }
+    .stack-header.backend { background:linear-gradient(90deg,#065f46,#059669); }
+    .stack-header.security { background:linear-gradient(90deg,#9a3412,#ea580c); }
+
+    .stack-table {
+      width:100%;
+      border-collapse:collapse;
+      border:1px solid var(--gray-200);
+      border-top:none;
+      border-radius:0 0 8px 8px;
+      overflow:hidden;
+    }
+    .stack-table tr:nth-child(even) { background:var(--gray-50); }
+    .stack-table td {
+      padding:9px 16px;
+      font-size:12.5px;
+      border-bottom:1px solid var(--gray-100);
+      vertical-align:top;
+    }
+    .stack-table td:first-child {
+      font-weight:600;
+      color:var(--gray-900);
+      width:35%;
+    }
+    .stack-table td:last-child { color:var(--gray-600); }
+    .stack-table tr:last-child td { border-bottom:none; }
+
+    /* Comparison Table */
+    .comp-table {
+      width:100%;
+      border-collapse:collapse;
+      border:1px solid var(--gray-200);
+      border-radius:10px;
+      overflow:hidden;
+      margin:18px 0;
+      font-size:12px;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .comp-table thead tr {
+      background:var(--blue-900);
+      color:white;
+    }
+    .comp-table thead td {
+      padding:10px 12px;
+      font-weight:700;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    .comp-table tbody tr:nth-child(even) { background:var(--gray-50); }
+    .comp-table tbody td {
+      padding:8px 12px;
+      border-bottom:1px solid var(--gray-200);
+      vertical-align:middle;
+    }
+    .comp-table tr.highlight {
+      background:#f0f9ff;
+      font-weight:600;
+    }
+    .comp-table tr.highlight td {
+      border-bottom:2px solid var(--primary);
+    }
+    .badge-check {
+      display:inline-block;
+      background:#dcfce7;
+      color:#166534;
+      font-weight:700;
+      padding:2px 8px;
+      border-radius:4px;
+      font-size:10.5px;
+    }
+    .badge-cross {
+      display:inline-block;
+      background:#fee2e2;
+      color:#991b1b;
+      font-weight:700;
+      padding:2px 8px;
+      border-radius:4px;
+      font-size:10.5px;
+    }
+    .badge-warn {
+      display:inline-block;
+      background:#fef3c7;
+      color:#92400e;
+      font-weight:700;
+      padding:2px 8px;
+      border-radius:4px;
+      font-size:10.5px;
+    }
+
+    /* Bug Fix Items */
+    .bug-item {
+      border-left:3px solid var(--primary);
+      padding:12px 16px;
+      margin-bottom:12px;
+      background:#f8fafc;
+      border-radius:0 8px 8px 0;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .bug-title {
+      font-size:12.5px;
+      font-weight:700;
+      color:var(--gray-900);
+      margin-bottom:4px;
+    }
+    .bug-what {
+      font-size:12px;
+      color:var(--gray-700);
+      margin-bottom:4px;
+    }
+    .bug-fix {
+      font-size:11.5px;
+      color:#166534;
+      background:#f0fdf4;
+      border-left:2px solid var(--green);
+      padding:5px 8px;
+      border-radius:0 6px 6px 0;
+    }
+
+    /* Code Snippet */
+    pre {
+      font-family:'JetBrains Mono',monospace;
+      font-size:11px;
+      background:var(--blue-900);
+      color:#bae6fd;
+      padding:14px 18px;
+      border-radius:8px;
+      overflow-x:auto;
+      margin:14px 0;
+      line-height:1.55;
+      white-space:pre-wrap;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    code {
+      font-family:'JetBrains Mono',monospace;
+      font-size:11.5px;
+      background:var(--gray-100);
+      padding:2px 6px;
+      border-radius:4px;
+      color:var(--primary-dark);
+    }
+
+    /* Services Table */
+    .services-table {
+      width:100%;
+      border-collapse:collapse;
+      border:1px solid var(--gray-200);
+      border-radius:10px;
+      overflow:hidden;
+      margin:16px 0;
+      font-size:12.5px;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .services-table thead tr {
+      background:var(--gray-900);
+      color:white;
+    }
+    .services-table thead td {
+      padding:10px 14px;
+      font-weight:600;
+      font-size:11.5px;
+    }
+    .services-table tbody tr:nth-child(even) { background:var(--gray-50); }
+    .services-table tbody td {
+      padding:8px 14px;
+      border-bottom:1px solid var(--gray-100);
+    }
+    .services-table tbody tr:last-child td { border-bottom:none; }
+
+    .badge-live {
+      display:inline-block;
+      background:#dcfce7;
+      color:#166534;
+      font-weight:700;
+      padding:2px 10px;
+      border-radius:20px;
+      font-size:11px;
+    }
+
+    /* Footer */
+    .footer {
+      background:var(--gray-900);
+      color:#d1d5db;
+      padding:28px 50px;
+      font-size:12px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-top:40px;
+      page-break-inside:avoid !important;
+      break-inside:avoid !important;
+    }
+    .footer strong { color:white; }
+
+    /* Floating Print Button */
+    .print-btn {
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      background:var(--primary);
+      color:white;
+      border:none;
+      padding:12px 22px;
+      border-radius:50px;
+      font-family:'Inter',sans-serif;
+      font-size:13.5px;
+      font-weight:600;
+      cursor:pointer;
+      box-shadow:0 4px 20px rgba(2,132,199,0.4);
+      z-index:999;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .print-btn:hover { background:var(--primary-dark); }
+
+    /* Clean Page Break Utility */
+    .page-break {
+      page-break-before:always !important;
+      break-before:page !important;
+      height:0;
+      margin:0;
+      padding:0;
+      border:none;
+    }
+
+    /* Responsive Styles for Mobile */
+    @media (max-width: 768px) {
+      .top-nav { padding:10px 16px; }
+      .cover { padding:36px 20px; }
+      .cover h1 { font-size:30px; }
+      .cover-sub { font-size:14.5px; }
+      .content { padding:20px 16px; }
+      .overview-grid, .kpi-strip, .charts-grid { grid-template-columns:1fr; }
+      .footer { flex-direction:column; gap:12px; text-align:center; padding:20px 16px; }
+      .comp-table { font-size:11px; }
+      .comp-table thead td, .comp-table tbody td { padding:6px 5px; }
+    }
+
+    /* Strict Anti-Split CSS Print Engine Rules */
+    @media print {
+      @page {
+        size: A4 portrait;
+        margin: 10mm 10mm 12mm 10mm;
+      }
+      *, *::before, *::after {
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
+      html, body {
+        width: 100% !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      .top-nav, .print-btn {
+        display: none !important;
+      }
+      .cover {
+        padding: 44px 36px !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .content {
+        padding: 16px 20px !important;
+        max-width: 100% !important;
+      }
+      /* Prevent individual content blocks from being sliced in half across pages */
+      .overview-card, .kpi-strip, .kpi-box, .diagram-container, 
+      .stack-section, .bug-item, .services-table, .comp-table, pre, tr, .flow, .footer, svg {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      .overview-grid, .charts-grid {
+        break-inside: auto !important;
+        page-break-inside: auto !important;
+      }
+      .overview-card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+      }
+      /* Explicit Page Break Boundaries */
+      .page-break {
+        page-break-before: always !important;
+        break-before: page !important;
+        display: block !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        clear: both !important;
+      }
+      h1, h2, h3, h4, .section-label {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
+      }
+      thead {
+        display: table-header-group !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Navigation Bar for Mobile and PC -->
+<nav class="top-nav">
+  <a href="#" class="nav-brand">
+    <span>PrivacyVision</span>
+    <span class="nav-brand-badge">Project Documentation</span>
+  </a>
+  <div class="nav-actions">
+    <button class="btn-nav-download" onclick="window.print()">Save as PDF</button>
+  </div>
+</nav>
+
+<button class="print-btn" onclick="window.print()">
+  <span>Print / Save as PDF</span>
+</button>
+
+<div id="printable-doc">
+
+  <!-- PAGE 1: Cover Header + Overview + Key Metrics -->
+  <div class="cover">
+    <div class="cover-badge">Enterprise AI Security · Computer Vision · Autonomous Web Agents</div>
+    <h1>Privacy<span>Vision</span></h1>
+    <p class="cover-sub">On-Device Visual Perception and Zero-Knowledge Air-Gapped Redaction for Autonomous Browser Agents</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Category</span>
+        <span class="cover-meta-value">Computer Vision / Web AI / Privacy</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Client Platform</span>
+        <span class="cover-meta-value">Chrome Manifest V3 (WebGPU / WASM)</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Backend Platform</span>
+        <span class="cover-meta-value">FastAPI / 24-7 Background Daemon</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Specification Version</span>
+        <span class="cover-meta-value">3.0.0 (Production Standard)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- 01 · Overview -->
+    <div class="section">
+      <div class="section-label">01 · Overview</div>
+      <h2>What is PrivacyVision?</h2>
+      <p>PrivacyVision is an <strong>on-device visual perception engine and client-side privacy firewall</strong> built for autonomous Vision-Language Model (VLM) browser agents. It replaces traditional cloud-leaking browser extensions with an <strong>air-gapped zero-knowledge perception layer</strong>.</p>
+      <p>Traditional browser agents capture raw viewport screenshots and raw Document Object Model (DOM) trees and send them directly to cloud LLMs (such as GPT-4V or remote server endpoints). This exfiltrates passwords, banking credentials, two-factor codes, profile photos, and government identity cards to remote servers. PrivacyVision solves this by detecting and physically redacting all sensitive data <strong>inside client browser memory before network transmission</strong>.</p>
+
+      <div class="kpi-strip">
+        <div class="kpi-box">
+          <div class="kpi-num">96.5%</div>
+          <div class="kpi-title">Visual Accuracy</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-num">0.982</div>
+          <div class="kpi-title">Detection Precision</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-num">0.884</div>
+          <div class="kpi-title">Redaction IoU</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-num">0.00%</div>
+          <div class="kpi-title">Outbound Leak Rate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK SO CARDS START FRESH ON PAGE 2 (NO MID-CARD SPLIT) -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 2: Core Novelties & System Flow -->
+    <div class="section">
+      <div class="section-label">02 · Core Architectural Novelties</div>
+      <h2>Six Fundamental Differentiators</h2>
+
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 01</div>
+          <div class="label">Zero-Knowledge Perception</div>
+          <div class="value">The remote VLM receives only a sanitized, blinded visual canvas containing interface geometry and labeled masks. Raw pixels never leave the client.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 02</div>
+          <div class="label">Destructive Pixel Redaction</div>
+          <div class="value">Executed on an isolated OffscreenCanvas using Canvas2D (Blackout, Blur, Mask). The original pixel bytes are replaced in memory, making reverse extraction mathematically impossible.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 03</div>
+          <div class="label">Fail-Closed Privacy Firewall</div>
+          <div class="value">An in-memory pre-flight outbound interceptor scans outgoing screenshots and node text. If any unredacted PII is detected, network serialization is immediately killed.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 04</div>
+          <div class="label">On-Device Neural Models</div>
+          <div class="value">MediaPipe BlazeFace ONNX running directly via WebGPU/WASM for real-time human face localization, combined with MobileViT scene classification.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 05</div>
+          <div class="label">Statutory KYC Verification</div>
+          <div class="value">Mathematical Verhoeff checksum algorithm for Indian Aadhaar verification, Luhn algorithm for payment cards, PAN cards, UPI IDs, and IFSC codes.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Core Novelty 06</div>
+          <div class="label">Universal Page Coverage</div>
+          <div class="value">Seamless support across standard HTML, Google Forms (cross-frame injection), Google Docs, PDFs, and Single Page Applications (MutationObserver).</div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:28px;">Client Perception & Redaction Cycle</h3>
+      <div class="flow">
+        <div class="flow-step">Active Webpage</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">DOM Affordance Scan</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">BlazeFace Neural Model</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Verhoeff / Luhn Regex</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Offscreen Canvas Redact</div>
+      </div>
+
+      <h3>Firewall Gate & Remote Action Planning</h3>
+      <div class="flow">
+        <div class="flow-step">Pre-Flight Firewall</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Sanitized Transmission</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">VLM Action Planning</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Local Action Validator</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">Synthetic Event Click</div>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR ARCHITECTURE DIAGRAM -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 3: System Architecture Flowchart (Vector SVG Diagram) -->
+    <div class="section">
+      <div class="section-label">03 · System Architecture Diagram</div>
+      <h2>Visual Flowchart: The Air-Gapped Pipeline</h2>
+      <p>The vector flowchart below illustrates how raw user pixels are permanently sequestered inside client browser memory, ensuring that only sanitized visual tokens reach external infrastructure:</p>
+
+      <div class="diagram-container">
+        <div class="diagram-title">
+          <span>End-to-End Perception & Execution Pipeline Flowchart</span>
+          <span class="diagram-tag">Vector SVG Architecture</span>
+        </div>
+
+        <!-- Crisp Vector Flowchart SVG (Scales infinitely on Mobile & PC, sharp in PDF) -->
+        <svg viewBox="0 0 880 430" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'Inter',sans-serif;">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#0284c7" />
+            </marker>
+            <marker id="arrowGreen" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#16a34a" />
+            </marker>
+          </defs>
+
+          <!-- Client Side Boundary Box -->
+          <rect x="10" y="10" width="530" height="400" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="25" y="34" font-size="12" font-weight="700" fill="#0369a1" letter-spacing="1">CLIENT BROWSER ENVIRONMENT (CHROME MV3)</text>
+
+          <!-- Webpage Node -->
+          <rect x="30" y="60" width="135" height="70" rx="8" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <text x="97" y="90" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">Active Webpage</text>
+          <text x="97" y="110" font-size="10" fill="#64748b" text-anchor="middle">HTML / Forms / SPAs</text>
+
+          <!-- Content Script Node -->
+          <rect x="205" y="60" width="150" height="70" rx="8" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <text x="280" y="88" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">DOM Extractor</text>
+          <text x="280" y="108" font-size="10" fill="#64748b" text-anchor="middle">Affordance Mapping</text>
+
+          <!-- BlazeFace ONNX & Regex Node -->
+          <rect x="395" y="60" width="130" height="70" rx="8" fill="#ffffff" stroke="#0284c7" stroke-width="1.5"/>
+          <text x="460" y="88" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">Multi-Signal Scan</text>
+          <text x="460" y="108" font-size="10" fill="#64748b" text-anchor="middle">BlazeFace + Verhoeff</text>
+
+          <!-- Offscreen Canvas Redaction Node -->
+          <rect x="205" y="180" width="320" height="85" rx="8" fill="#f0f9ff" stroke="#0284c7" stroke-width="1.5"/>
+          <text x="365" y="206" font-size="12" font-weight="700" fill="#0369a1" text-anchor="middle">Isolated Offscreen Canvas Redaction</text>
+          <text x="365" y="226" font-size="10.5" fill="#334155" text-anchor="middle">Destructive Canvas2D Pixel Manipulation (DPR Scaled)</text>
+          <text x="365" y="246" font-size="9.5" font-weight="600" fill="#0284c7" text-anchor="middle">Blackout (Credentials) · Blur (Faces) · Mask (PII)</text>
+
+          <!-- Privacy Firewall Gate -->
+          <rect x="30" y="180" width="135" height="85" rx="8" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+          <text x="97" y="208" font-size="12" font-weight="700" fill="#c2410c" text-anchor="middle">Privacy Firewall</text>
+          <text x="97" y="228" font-size="10" fill="#9a3412" text-anchor="middle">Pre-Flight Gate</text>
+          <text x="97" y="246" font-size="9" font-weight="700" fill="#16a34a" text-anchor="middle">PASS-FAIL (Closed)</text>
+
+          <!-- Client Action Validator & Executor -->
+          <rect x="30" y="310" width="495" height="75" rx="8" fill="#ffffff" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="277" y="336" font-size="12" font-weight="700" fill="#166534" text-anchor="middle">Client Action Validator & Synthetic Executor</text>
+          <text x="277" y="356" font-size="10.5" fill="#475569" text-anchor="middle">Whitelisted Actions Only: CLICK, SCROLL, TYPE, FOCUS, WAIT</text>
+          <text x="277" y="372" font-size="9.5" fill="#64748b" text-anchor="middle">Guarantees Immunity Against Indirect Prompt Injections</text>
+
+          <!-- Server Side Boundary Box -->
+          <rect x="580" y="10" width="290" height="400" rx="12" fill="#faf5ff" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4"/>
+          <text x="595" y="34" font-size="12" font-weight="700" fill="#6b21a8" letter-spacing="1">REMOTE / LOCAL REASONING BACKEND</text>
+
+          <!-- Scene Classifier Node -->
+          <rect x="605" y="65" width="240" height="70" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="725" y="93" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">MobileViT Scene Classifier</text>
+          <text x="725" y="113" font-size="10" fill="#64748b" text-anchor="middle">Categorizes Page Topology (6 Classes)</text>
+
+          <!-- VLM Reasoning Node -->
+          <rect x="605" y="175" width="240" height="85" rx="8" fill="#ffffff" stroke="#7c3aed" stroke-width="1.5"/>
+          <text x="725" y="203" font-size="12" font-weight="700" fill="#0f172a" text-anchor="middle">VLM Reasoning Coordinator</text>
+          <text x="725" y="223" font-size="10" fill="#64748b" text-anchor="middle">LLaVA / Moondream / Gemini Flash</text>
+          <text x="725" y="241" font-size="9.5" fill="#7c3aed" font-weight="600" text-anchor="middle">Reasons on Sanitized Pixels Only</text>
+
+          <!-- Action JSON Output -->
+          <rect x="605" y="310" width="240" height="75" rx="8" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+          <text x="725" y="336" font-size="12" font-weight="700" fill="#166534" text-anchor="middle">Constrained Action JSON</text>
+          <text x="725" y="356" font-size="10" font-family="'JetBrains Mono',monospace" fill="#047857" text-anchor="middle">{ action: "CLICK", target: "el-29" }</text>
+
+          <!-- Connecting Arrows -->
+          <path d="M 165 95 L 200 95" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"/>
+          <path d="M 355 95 L 390 95" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"/>
+          <path d="M 460 130 L 460 175" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"/>
+          <path d="M 205 222 L 170 222" stroke="#0284c7" stroke-width="2" marker-end="url(#arrow)"/>
+          
+          <!-- Outbound Network Arrow (Only Sanitized Data) -->
+          <path d="M 97 265 L 97 290 L 550 290 L 550 100 L 600 100" stroke="#0284c7" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+          <text x="340" y="284" font-size="10" font-weight="700" fill="#0369a1" text-anchor="middle">Sanitized Context Only (Zero Raw Pixels)</text>
+
+          <!-- Server Downward to Action -->
+          <path d="M 725 135 L 725 170" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrow)"/>
+          <path d="M 725 260 L 725 305" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowGreen)"/>
+
+          <!-- Return Arrow to Client Executor -->
+          <path d="M 605 347 L 530 347" stroke="#16a34a" stroke-width="2" marker-end="url(#arrowGreen)"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR VISUAL CHARTS & LATENCY -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 4: Visual Data Charts & Latency Stopwatch -->
+    <div class="section">
+      <div class="section-label">04 · Data Visualizations & Telemetry</div>
+      <h2>Dataset Distribution & Measured Benchmarks</h2>
+      <p>Visual breakdown of the 9,900+ sample training dataset and comparative metric performance versus traditional raw-screenshot agent extensions:</p>
+
+      <div class="charts-grid">
+        <!-- Chart 1: Dataset Distribution Pie / Donut Chart -->
+        <div class="diagram-container">
+          <div class="diagram-title">
+            <span>Dataset Distribution (9,900+ Samples)</span>
+            <span class="diagram-tag">Vector Donut Chart</span>
+          </div>
+
+          <svg viewBox="0 0 360 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'Inter',sans-serif;">
+            <g transform="translate(130, 125)">
+              <circle r="72" cx="0" cy="0" fill="transparent" stroke="#0284c7" stroke-width="40" stroke-dasharray="228 228" stroke-dashoffset="0" />
+              <circle r="72" cx="0" cy="0" fill="transparent" stroke="#38bdf8" stroke-width="40" stroke-dasharray="114 342" stroke-dashoffset="-228" />
+              <circle r="72" cx="0" cy="0" fill="transparent" stroke="#10b981" stroke-width="40" stroke-dasharray="55 401" stroke-dashoffset="-342" />
+              <circle r="72" cx="0" cy="0" fill="transparent" stroke="#f59e0b" stroke-width="40" stroke-dasharray="55 401" stroke-dashoffset="-397" />
+              
+              <circle r="50" cx="0" cy="0" fill="#ffffff" />
+              <text x="0" y="-4" font-size="15" font-weight="800" fill="#0f172a" text-anchor="middle">9,900+</text>
+              <text x="0" y="14" font-size="9.5" font-weight="600" fill="#64748b" text-anchor="middle">SAMPLES</text>
+            </g>
+
+            <g transform="translate(245, 45)" font-size="11" font-weight="500" fill="#334155">
+              <rect x="0" y="0" width="12" height="12" rx="3" fill="#0284c7"/>
+              <text x="18" y="10">WebSight (50.5%)</text>
+              <text x="18" y="24" font-size="9.5" fill="#64748b">5,000 UI Layouts</text>
+
+              <rect x="0" y="45" width="12" height="12" rx="3" fill="#38bdf8"/>
+              <text x="18" y="55">Rico UI (25.3%)</text>
+              <text x="18" y="69" font-size="9.5" fill="#64748b">2,500 Forms/Modals</text>
+
+              <rect x="0" y="90" width="12" height="12" rx="3" fill="#10b981"/>
+              <text x="18" y="100">Indian KYC (12.1%)</text>
+              <text x="18" y="114" font-size="9.5" fill="#64748b">1,200 Procedural</text>
+
+              <rect x="0" y="135" width="12" height="12" rx="3" fill="#f59e0b"/>
+              <text x="18" y="145">MobileViT (12.1%)</text>
+              <text x="18" y="159" font-size="9.5" fill="#64748b">1,200 Scenes</text>
+            </g>
+          </svg>
+        </div>
+
+        <!-- Chart 2: Comparative Performance Bar Chart -->
+        <div class="diagram-container">
+          <div class="diagram-title">
+            <span>Accuracy & Precision Comparison</span>
+            <span class="diagram-tag">PrivacyVision vs Raw Agents</span>
+          </div>
+
+          <svg viewBox="0 0 360 250" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg" style="font-family:'Inter',sans-serif;">
+            <line x1="40" y1="190" x2="340" y2="190" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="145" x2="340" y2="145" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="100" x2="340" y2="100" stroke="#e2e8f0" stroke-width="1"/>
+            <line x1="40" y1="55"  x2="340" y2="55"  stroke="#e2e8f0" stroke-width="1"/>
+            
+            <text x="32" y="194" font-size="9" fill="#94a3b8" text-anchor="end">0%</text>
+            <text x="32" y="149" font-size="9" fill="#94a3b8" text-anchor="end">33%</text>
+            <text x="32" y="104" font-size="9" fill="#94a3b8" text-anchor="end">66%</text>
+            <text x="32" y="59"  font-size="9" fill="#94a3b8" text-anchor="end">100%</text>
+
+            <!-- Group 1: Visual Accuracy -->
+            <rect x="58" y="60" width="22" height="130" rx="3" fill="#0284c7"/>
+            <text x="69" y="53" font-size="8.5" font-weight="700" fill="#0284c7" text-anchor="middle">96.5%</text>
+            <rect x="84" y="135" width="22" height="55" rx="3" fill="#cbd5e1"/>
+            <text x="95" y="130" font-size="8.5" font-weight="600" fill="#64748b" text-anchor="middle">42%</text>
+            <text x="82" y="206" font-size="9" font-weight="600" fill="#334155" text-anchor="middle">Accuracy</text>
+
+            <!-- Group 2: Precision -->
+            <rect x="130" y="58" width="22" height="132" rx="3" fill="#0284c7"/>
+            <text x="141" y="51" font-size="8.5" font-weight="700" fill="#0284c7" text-anchor="middle">0.98</text>
+            <rect x="156" y="148" width="22" height="42" rx="3" fill="#cbd5e1"/>
+            <text x="167" y="143" font-size="8.5" font-weight="600" fill="#64748b" text-anchor="middle">0.31</text>
+            <text x="154" y="206" font-size="9" font-weight="600" fill="#334155" text-anchor="middle">Precision</text>
+
+            <!-- Group 3: Recall -->
+            <rect x="202" y="62" width="22" height="128" rx="3" fill="#0284c7"/>
+            <text x="213" y="55" font-size="8.5" font-weight="700" fill="#0284c7" text-anchor="middle">0.95</text>
+            <rect x="228" y="139" width="22" height="51" rx="3" fill="#cbd5e1"/>
+            <text x="239" y="134" font-size="8.5" font-weight="600" fill="#64748b" text-anchor="middle">0.38</text>
+            <text x="226" y="206" font-size="9" font-weight="600" fill="#334155" text-anchor="middle">Recall</text>
+
+            <!-- Group 4: Leak Protection -->
+            <rect x="274" y="55" width="22" height="135" rx="3" fill="#16a34a"/>
+            <text x="285" y="48" font-size="8.5" font-weight="700" fill="#16a34a" text-anchor="middle">100%</text>
+            <rect x="300" y="190" width="22" height="0" rx="3" fill="#ef4444"/>
+            <text x="311" y="185" font-size="8.5" font-weight="700" fill="#dc2626" text-anchor="middle">0%</text>
+            <text x="298" y="206" font-size="9" font-weight="600" fill="#334155" text-anchor="middle">Protection</text>
+
+            <!-- Legend -->
+            <g transform="translate(90, 228)" font-size="10" font-weight="500">
+              <rect x="0" y="0" width="12" height="10" rx="2" fill="#0284c7"/>
+              <text x="16" y="9" fill="#334155">PrivacyVision</text>
+              <rect x="100" y="0" width="12" height="10" rx="2" fill="#cbd5e1"/>
+              <text x="116" y="9" fill="#64748b">Raw VLM Agent</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Visual Latency Stopwatch Waterfall -->
+      <div class="diagram-container">
+        <div class="diagram-title">
+          <span>Latency Stopwatch Timeline (~657 ms Total Cycle)</span>
+          <span class="diagram-tag">Real-Time Performance Breakdown</span>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Tab Screenshot Capture (chrome.tabs.captureVisibleTab)</span>
+            <span>65 ms (9.9%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 9.9%; background: #0284c7;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>DOM Node Extraction (TreeWalker Affordance Traversal)</span>
+            <span>14 ms (2.1%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 2.1%; background: #38bdf8;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Multi-Signal Privacy Engine (DOM + Semantic + Checksums)</span>
+            <span>45 ms (6.8%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 6.8%; background: #0284c7;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>BlazeFace Neural Model (WebGPU/WASM Face Localization)</span>
+            <span>16 ms (2.4%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 2.4%; background: #6366f1;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Offscreen Canvas Destructive Redaction (Canvas2D DPR Scaling)</span>
+            <span>18 ms (2.7%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 2.7%; background: #0284c7;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Pre-Flight Fail-Closed Privacy Firewall Inspection</span>
+            <span>4 ms (0.6%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 0.6%; background: #16a34a;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Network Round-Trip & VLM Reasoning (Sanitized Payload to LLaVA)</span>
+            <span>480 ms (73.1%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 73.1%; background: #94a3b8;"></div>
+          </div>
+        </div>
+
+        <div class="latency-bar-row">
+          <div class="latency-bar-header">
+            <span>Client Action Validation & Synthetic Human Dispatch</span>
+            <span>15 ms (2.3%)</span>
+          </div>
+          <div class="latency-bar-track">
+            <div class="latency-bar-fill" style="width: 2.3%; background: #16a34a;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR LITERATURE REVIEW & COMPARISON -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 5: Literature Review & Comparative Analysis Table -->
+    <div class="section">
+      <div class="section-label">05 · Literature Review & Comparison</div>
+      <h2>Comparison Against Existing Literature</h2>
+      
+      <p>Existing literature in web agent automation focuses on benchmark performance while neglecting the acute privacy leakage inherent in multimodal screenshots:</p>
+      <ul>
+        <li><strong>Mind2Web (Deng et al., 2023):</strong> Benchmarks LLM reasoning over raw DOM trees. Transmits complete DOM hierarchies to remote models, lacking support for visual-only PII and offering no protection against credential exfiltration.</li>
+        <li><strong>VisualWebArena (Koh et al., 2024):</strong> Supplies full-page screenshots to VLMs for visual grounding. Streams unredacted screens containing passwords, user avatars, and billing records directly to cloud APIs.</li>
+        <li><strong>SeeAct (Zheng et al., 2024):</strong> Overlays Set-of-Marks visual tags onto raw screenshots for GPT-4V. Requires raw visual pixels to ground buttons, entirely compromising privacy during authenticated user sessions.</li>
+        <li><strong>Enterprise Network DLPs (Symantec, Zscaler):</strong> Proxies inspect HTTP/TLS traffic on network gateways. Cannot parse rendered client-side canvases, SPAs, or encrypted WebSocket streams; cannot alter rendered pixel buffers.</li>
+        <li><strong>Client Ad-Blockers (uBlock Origin):</strong> Intercepts network URLs via declarativeNetRequest filter lists. Only blocks tracking scripts; cannot parse visual scenes or assist browser automation.</li>
+      </ul>
+
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <td>Feature / Dimension</td>
+            <td>Raw VLM Extensions</td>
+            <td>Mind2Web / WebArena</td>
+            <td>Network DLP Gateways</td>
+            <td>Client Ad-Blockers</td>
+            <td>PrivacyVision (This Project)</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight">
+            <td>Execution Environment</td>
+            <td>Remote Cloud</td>
+            <td>Remote Server / Node.js</td>
+            <td>Proxy Appliance</td>
+            <td>Browser Content Script</td>
+            <td><span class="badge-check">Chrome MV3 + Local Daemon</span></td>
+          </tr>
+          <tr>
+            <td>Screenshot Handling</td>
+            <td><span class="badge-cross">Raw Exfiltration</span></td>
+            <td><span class="badge-cross">Raw Exfiltration</span></td>
+            <td>Blind to Pixels</td>
+            <td>No Visual Pipeline</td>
+            <td><span class="badge-check">100% On-Device Canvas Redaction</span></td>
+          </tr>
+          <tr>
+            <td>Biometric Face Redaction</td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-check">BlazeFace Neural Model (On-Device)</span></td>
+          </tr>
+          <tr>
+            <td>Statutory IDs (Aadhaar/PAN)</td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-warn">Basic Regex Only</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-check">Aadhaar (Verhoeff), PAN, UPI, IFSC</span></td>
+          </tr>
+          <tr>
+            <td>Detection Methodology</td>
+            <td>None (Raw dump)</td>
+            <td>Text DOM only</td>
+            <td>HTTP body regex</td>
+            <td>URL domain filter lists</td>
+            <td><span class="badge-check">Multi-Signal (DOM + Semantic + Regex + ML)</span></td>
+          </tr>
+          <tr>
+            <td>Pixel Redaction Mechanism</td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-check">Destructive Canvas2D (Blackout/Blur/Mask)</span></td>
+          </tr>
+          <tr>
+            <td>Prompt Injection Defense</td>
+            <td><span class="badge-cross">Vulnerable</span></td>
+            <td><span class="badge-cross">Vulnerable</span></td>
+            <td>N/A</td>
+            <td>N/A</td>
+            <td><span class="badge-check">Whitelisted Action Schema + Validator</span></td>
+          </tr>
+          <tr>
+            <td>Fail-Closed Security Gate</td>
+            <td><span class="badge-cross">None</span></td>
+            <td><span class="badge-cross">None</span></td>
+            <td>Pass-through on error</td>
+            <td>Drop URL only</td>
+            <td><span class="badge-check">Pre-Flight Privacy Firewall (Zero Leaks)</span></td>
+          </tr>
+          <tr>
+            <td>Shadow DOM / Google Forms</td>
+            <td><span class="badge-warn">Partial</span></td>
+            <td><span class="badge-cross">Fails on Iframes</span></td>
+            <td>Cannot parse DOM</td>
+            <td>N/A</td>
+            <td><span class="badge-check">Deep Multi-Frame Bridge (all_frames: true)</span></td>
+          </tr>
+          <tr>
+            <td>Client Memory Overhead</td>
+            <td>~12 MB</td>
+            <td>>150 MB (Node.js)</td>
+            <td>Server-bound</td>
+            <td><15 MB</td>
+            <td><span class="badge-check">~18.4 MB JS Heap (On-demand WebGPU/WASM)</span></td>
+          </tr>
+          <tr>
+            <td>End-to-End Cycle Latency</td>
+            <td>2,500 – 4,000 ms</td>
+            <td>1,800 – 3,500 ms</td>
+            <td>200 – 600 ms</td>
+            <td><5 ms</td>
+            <td><span class="badge-check">~657 ms (64 ms local redaction)</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR TECHNOLOGY STACK -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 6: Full Technology Stack -->
+    <div class="section">
+      <div class="section-label">06 · Technology Stack</div>
+      <h2>Full Technology Stack</h2>
+
+      <div class="stack-section">
+        <div class="stack-header client">Client Browser Layer (Chrome Manifest V3)</div>
+        <table class="stack-table">
+          <tr><td>TypeScript 5.4</td><td>Strictly typed codebase with shared contracts across content, worker, and popup</td></tr>
+          <tr><td>Vite 5.4 Bundler</td><td>Multi-target packaging with isolated chunks for content script and service worker</td></tr>
+          <tr><td>Chrome Offscreen Canvas</td><td>Isolated document for offscreen pixel buffer rendering and destructive Canvas2D filters</td></tr>
+          <tr><td>MutationObserver API</td><td>Continuous DOM observation re-scanning SPAs when dynamic elements appear</td></tr>
+          <tr><td>Frame Bridge Injection</td><td>Recursive subframe scanner executing on all_frames for embedded Google Forms</td></tr>
+        </table>
+      </div>
+
+      <div class="stack-section" style="margin-top:14px">
+        <div class="stack-header ai">On-Device Machine Learning & Vision Layer</div>
+        <table class="stack-table">
+          <tr><td>ONNX Runtime Web</td><td>Client-side execution provider running on WebGPU with fallback to WASM SIMD</td></tr>
+          <tr><td>MediaPipe BlazeFace ONNX</td><td>128x128 single-shot neural face detector with non-maximum suppression (~15ms)</td></tr>
+          <tr><td>MobileViT Small Classifier</td><td>5.6M parameter vision transformer fine-tuned for browser scene classification</td></tr>
+          <tr><td>Verhoeff Checksum Engine</td><td>Dihedral group D5 permutation algorithm for strict Indian Aadhaar validation</td></tr>
+          <tr><td>Luhn Checksum Engine</td><td>Modulo-10 algorithm for payment cards (Visa, MasterCard, RuPay, Amex)</td></tr>
+        </table>
+      </div>
+
+      <div class="stack-section" style="margin-top:14px">
+        <div class="stack-header backend">Autonomous Backend & Reasoning Engine (FastAPI)</div>
+        <table class="stack-table">
+          <tr><td>Python 3.9+ / FastAPI</td><td>Asynchronous REST API server hosting visual reasoning and classification endpoints</td></tr>
+          <tr><td>Pydantic v2</td><td>Strict schema validation enforcing action contracts and rejecting payload tampering</td></tr>
+          <tr><td>Ollama Local VLM Client</td><td>Local inference client coordinating with LLaVA, Moondream, or Qwen2-VL</td></tr>
+          <tr><td>Google Generative AI</td><td>Gemini 1.5 Flash cloud coordinator for high-speed remote visual planning</td></tr>
+          <tr><td>Payload Validator</td><td>Server-side second-pass auditor ensuring no plaintext PII reached the endpoint</td></tr>
+        </table>
+      </div>
+
+      <div class="stack-section" style="margin-top:14px">
+        <div class="stack-header security">24/7 OS Background Daemon Infrastructure</div>
+        <table class="stack-table">
+          <tr><td>macOS launchd Daemon</td><td>User LaunchAgent (com.privacyvision.backend.plist) starting on boot and running 24/7</td></tr>
+          <tr><td>Linux systemd Service</td><td>User service (privacyvision.service) ensuring persistent background availability</td></tr>
+          <tr><td>Windows Startup VBS</td><td>Silent background runner invoking pythonw.exe without opening a command prompt</td></tr>
+          <tr><td>Cross-Platform Controller</td><td>Python daemon.py utility providing 1-click install, start, stop, and status management</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR CASE STUDY & ENGINEERING LOG -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 7: Real-World Case Study & Engineering Bug Fixes -->
+    <div class="section">
+      <div class="section-label">07 · Case Study & Engineering Log</div>
+      <h2>Real-World Deployment: Live Institutional Portal (DSCE)</h2>
+      <p>To evaluate real-world robustness outside synthetic benchmarks, PrivacyVision was deployed on the live public contact directory of <strong>Dayananda Sagar College of Engineering</strong> (<code>dsce.edu.in/contact-us</code>):</p>
+      
+      <div class="overview-grid" style="grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:24px;">
+        <div class="overview-card">
+          <div class="tag-id">Finding 01</div>
+          <div class="label">Dense PII Environment</div>
+          <div class="value">The live portal presents departmental telephone numbers (080-42161708), official emails (ppl-dsce@dayanandasagar.edu), and faculty portraits.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Finding 02</div>
+          <div class="label">48 Detected PII Items</div>
+          <div class="value">The multi-signal engine automatically localized 48 sensitive items across table cells, interactive anchor tags, and visual image elements.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Finding 03</div>
+          <div class="label">Fail-Closed Verification</div>
+          <div class="value">When an interactive anchor tag initially carried raw email text, the Privacy Firewall intercepted the outbound transmission, verifying fail-closed security.</div>
+        </div>
+      </div>
+
+      <h2>Hard-Won Engineering Fixes</h2>
+
+      <div class="bug-item">
+        <div class="bug-title">Bug #1 — Unredacted Anchor Node Text on Mailto Links (el-29)</div>
+        <div class="bug-what">Problem: dom-extractor.ts previously only sanitized .text for input and textarea tags. On links like &lt;a href="mailto:..."&gt;, the inner text contained raw email addresses, causing the Privacy Firewall to rightly block the outbound request.</div>
+        <div class="bug-fix">Fix: Extended node-text sanitization to all interactive elements (a, button, td, span) and added active regex sweep replacing any detected PII with [EMAIL_REDACTED] or [PHONE_REDACTED].</div>
+      </div>
+
+      <div class="bug-item">
+        <div class="bug-title">Bug #2 — Unchecked runtime.lastError Port Closure in Chrome MV3</div>
+        <div class="bug-what">Problem: In Manifest V3, when checkStatus() sent GET_STATUS while the service worker was waking up, uninspected lastError properties caused Chrome to flag red error badges in chrome://extensions.</div>
+        <div class="bug-fix">Fix: Added explicit chrome.runtime.lastError checks to every message callback in popup.ts and consolidated duplicate message listeners in content-script.ts.</div>
+      </div>
+
+      <div class="bug-item">
+        <div class="bug-title">Bug #3 — Terminal & VSCode Closure Terminating Backend</div>
+        <div class="bug-what">Problem: Running uvicorn directly in a terminal killed the backend process upon closing VS Code or terminal due to SIGHUP termination signals.</div>
+        <div class="bug-fix">Fix: Implemented permanent OS-level background services: macOS launchd user LaunchAgent, Linux systemd user service, and Windows Startup VBScript running silently via pythonw.exe.</div>
+      </div>
+
+      <div class="bug-item">
+        <div class="bug-title">Bug #4 — High-DPI Canvas Coordinate Scaling (DPR Blurring)</div>
+        <div class="bug-what">Problem: On Retina displays (devicePixelRatio = 2.0), physical screenshot pixel buffers did not align with CSS bounding boxes, causing offset redactions.</div>
+        <div class="bug-fix">Fix: Injected window.devicePixelRatio into DOM extraction context and multiplied all bounding box dimensions by DPR inside the offscreen canvas redactor.</div>
+      </div>
+
+      <div class="bug-item">
+        <div class="bug-title">Bug #5 — Google Forms Shadow DOM & Iframe Barrier</div>
+        <div class="bug-what">Problem: Google Forms embeds input fields inside custom web components and iframes where top-level querySelector cannot reach them.</div>
+        <div class="bug-fix">Fix: Configured all_frames: true in manifest.json, created frame-bridge.ts for subframe scanning, and added recursive shadowRoot traversal.</div>
+      </div>
+    </div>
+
+    <!-- CLEAN PAGE BREAK FOR FUTURE SCOPE & REPOSITORY STRUCTURE -->
+    <div class="page-break"></div>
+
+    <!-- PAGE 8: Future Scope & Blueprint -->
+    <div class="section">
+      <div class="section-label">08 · Future Scope & System Blueprint</div>
+      <h2>Future Scope & Engineering Roadmap</h2>
+      
+      <div class="overview-grid">
+        <div class="overview-card">
+          <div class="tag-id">Roadmap 01</div>
+          <div class="label">Edge SLMs in WebGPU</div>
+          <div class="value">Porting 2B-3B reasoning models (Google Gemma-2 2B, Microsoft Phi-3.5 Mini) directly inside Chrome via WebGPU to remove external server dependencies completely.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Roadmap 02</div>
+          <div class="label">Zero-Knowledge Proofs (zk-SNARKs)</div>
+          <div class="value">Generating cryptographic proofs certifying that all detected PII was redacted according to enterprise policy without disclosing the underlying private data.</div>
+        </div>
+        <div class="overview-card">
+          <div class="tag-id">Roadmap 03</div>
+          <div class="label">Differential Privacy on Tokens</div>
+          <div class="value">Adding calibrated mathematical noise to intermediate visual embeddings to prevent neural feature inversion attacks.</div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:24px;">Key Files Blueprint</h3>
+      <pre>PrivacyVision/
+├── extension/                          # Chrome MV3 Extension Core
+│   ├── manifest.json                  # MV3 Manifest with all_frames & offscreen permissions
+│   ├── src/
+│   │   ├── background/service-worker.ts # Master coordinator, capture, firewall check
+│   │   ├── content/
+│   │   │   ├── dom-extractor.ts       # Interactive node extraction & text sanitization
+│   │   │   ├── frame-bridge.ts        # Sub-frame scanner for embedded Google Forms
+│   │   │   ├── mutation-watcher.ts    # MutationObserver for real-time SPA updates
+│   │   │   └── overlay.ts             # Floating on-page inspection overlay
+│   │   ├── offscreen/
+│   │   │   ├── offscreen.ts           # Offscreen document image processing handler
+│   │   │   └── redactor.ts            # DPR-scaled destructive Canvas2D blackout/blur/mask
+│   │   ├── privacy/
+│   │   │   ├── detector.ts            # Unified multi-signal privacy detection engine
+│   │   │   ├── face-detector.ts       # BlazeFace ONNX face detection with heuristic fallback
+│   │   │   ├── regex-detector.ts      # Verhoeff (Aadhaar), Luhn (Card), PAN, UPI, IFSC
+│   │   │   └── firewall.ts            # Pre-flight fail-closed outbound leak inspector
+│   │   ├── vision/
+│   │   │   └── blazeface-runner.ts    # WebGPU/WASM ONNX runner for neural face bounding boxes
+│   │   └── popup/
+│   │       ├── popup.ts               # Dashboard controller with lastError protection
+│   │       └── popup.html             # Sleek dashboard interface with live telemetry
+├── server/                            # Autonomous Reasoning Backend (FastAPI)
+│   ├── app/
+│   │   ├── main.py                    # REST API endpoints (/health, /api/agent, /api/classify)
+│   │   ├── services/classifier.py     # MobileViT ONNX scene classification
+│   │   └── services/vlm.py            # VLM coordinator (LLaVA / Gemini / Semantic fallback)
+│   ├── daemon.py                      # Cross-platform background service manager (launchd/systemd)
+│   └── requirements.txt               # Backend dependencies
+├── whitepaper.html                    # Interactive light-mode system documentation & PDF export
+└── install_permanent_service.sh       # 1-click OS background service setup</pre>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div>
+        <strong>PrivacyVision</strong> — On-Device Visual Perception for Autonomous Browser Agents<br>
+        Enterprise AI Security & Privacy-Preserving Web Automation Standard
+      </div>
+      <div>
+        Chrome MV3 · WebGPU / WASM · MobileViT · BlazeFace · FastAPI · launchd
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>

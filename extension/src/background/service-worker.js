@@ -131,15 +131,36 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
         return true;
     }
     if (message.type === "SET_SERVER_URL") {
-        const newUrl = (message.url || "").trim().replace(/\/+$/, "");
-        if (newUrl) {
-            currentServerUrl = newUrl;
-            chrome.storage?.local?.set({ serverUrl: newUrl });
-            sendResponse({ ok: true, serverUrl: currentServerUrl });
-        }
-        else {
-            sendResponse({ ok: false, error: "Invalid server URL" });
-        }
+        (async () => {
+            try {
+                const rawUrl = (message.url || "").trim();
+                if (!rawUrl || !/^https?:\/\/[a-zA-Z0-9]/i.test(rawUrl)) {
+                    sendResponse({
+                        ok: false,
+                        error: "Please enter a valid URL starting with http:// or https:// (e.g. http://localhost:8000)"
+                    });
+                    return;
+                }
+                const cleanUrl = rawUrl.replace(/\/+$/, "");
+                currentServerUrl = cleanUrl;
+                if (chrome.storage?.local) {
+                    await chrome.storage.local.set({ serverUrl: cleanUrl });
+                }
+                // Test connectivity to the new URL
+                let reachable = false;
+                try {
+                    const testRes = await fetch(`${cleanUrl}/health`, { signal: AbortSignal.timeout(2500) });
+                    reachable = testRes.ok;
+                }
+                catch {
+                    reachable = false;
+                }
+                sendResponse({ ok: true, serverUrl: currentServerUrl, reachable });
+            }
+            catch (err) {
+                sendResponse({ ok: false, error: err.message || "Failed to update endpoint" });
+            }
+        })();
         return true;
     }
     if (message.type === "RUN_AGENT") {

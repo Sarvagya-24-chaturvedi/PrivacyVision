@@ -68,6 +68,13 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     })();
     return true;
   }
+
+  if (message.type === "FRAME_SCAN_RESULT") {
+    const existing = (window as any).__privacyVisionFrameDetections || [];
+    (window as any).__privacyVisionFrameDetections = [...existing, ...(message.payload?.detections || [])];
+    sendResponse({ ok: true });
+    return;
+  }
 });
 
 // Start MutationObserver for SPA re-scan
@@ -75,12 +82,4 @@ const _mutationEngine = new UnifiedPrivacyEngine(new PrivacyPolicyManager());
 startMutationWatch(_mutationEngine, (newDetections) => {
   // Cache latest detections for next popup capture
   (window as any).__privacyVisionLastDetections = newDetections;
-});
-
-// Collect frame scan results from sub-frames
-chrome.runtime.onMessage.addListener((msg, _sender) => {
-  if (msg.type === 'FRAME_SCAN_RESULT') {
-    const existing = (window as any).__privacyVisionFrameDetections || [];
-    (window as any).__privacyVisionFrameDetections = [...existing, ...msg.payload.detections];
-  }
 });

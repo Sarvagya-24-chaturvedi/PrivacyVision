@@ -63,6 +63,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Check system status
   function checkStatus() {
     chrome.runtime.sendMessage({ type: "GET_STATUS" }, (response) => {
+      // Check lastError immediately to prevent Chrome logging "Unchecked runtime.lastError"
+      if (chrome.runtime.lastError) {
+        serverStatus.innerText = "Offline (Demo Mode)";
+        serverStatus.className = "text-warning";
+        serverDot.className = "dot dot-offline";
+        return;
+      }
       if (response?.serverUrl && inputServerUrl) {
         inputServerUrl.value = response.serverUrl;
       }
@@ -83,17 +90,30 @@ document.addEventListener("DOMContentLoaded", () => {
   btnSaveEndpoint?.addEventListener("click", () => {
     const newUrl = inputServerUrl.value.trim();
     if (!newUrl) {
-      addLog("Please enter a valid backend URL", "warning");
+      addLog("Please enter a backend URL (e.g. http://localhost:8000)", "warning");
+      return;
+    }
+    if (!/^https?:\/\//i.test(newUrl)) {
+      addLog("URL must start with http:// or https:// (e.g. http://localhost:8000)", "warning");
       return;
     }
     btnSaveEndpoint.disabled = true;
     chrome.runtime.sendMessage({ type: "SET_SERVER_URL", url: newUrl }, (res) => {
       btnSaveEndpoint.disabled = false;
+      const lastErr = chrome.runtime.lastError?.message;
+      if (lastErr) {
+        addLog(`Could not contact extension background: ${lastErr}. Reload extension at chrome://extensions.`, "danger");
+        return;
+      }
       if (res?.ok) {
-        addLog(`Backend endpoint updated to: ${res.serverUrl}`, "success");
+        if (res.reachable) {
+          addLog(`✓ Connected to backend endpoint: ${res.serverUrl}`, "success");
+        } else {
+          addLog(`Endpoint saved as ${res.serverUrl}, but /health is currently unreachable.`, "warning");
+        }
         checkStatus();
       } else {
-        addLog(`Failed to update endpoint: ${res?.error}`, "danger");
+        addLog(`Failed to update endpoint: ${res?.error || "Unknown error"}`, "danger");
       }
     });
   });
@@ -154,6 +174,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.runtime.sendMessage({ type: "CAPTURE_CONTEXT" }, (res: CaptureContextResponse) => {
       btnCapture.disabled = false;
+      const err = chrome.runtime.lastError?.message;
+      if (err) {
+        addLog(`Capture failed: ${err}. Please refresh the webpage and try again.`, "danger");
+        return;
+      }
+
       if (res?.ok && res.context) {
         updateContextUI(res.context);
         addLog(
@@ -172,6 +198,11 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       if (!tab?.id) return;
       chrome.tabs.sendMessage(tab.id, { type: "TOGGLE_OVERLAY" }, (res) => {
+        const err = chrome.runtime.lastError?.message;
+        if (err) {
+          addLog(`Overlay inactive on this tab: ${err}`, "warning");
+          return;
+        }
         if (res?.visible) {
           addLog("Privacy inspection overlay enabled on active page.", "info");
         } else {
@@ -187,6 +218,11 @@ document.addEventListener("DOMContentLoaded", () => {
     chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => {
       if (!tab?.id) return;
       chrome.tabs.sendMessage(tab.id, { type: "EXTRACT_DOM" }, (res) => {
+        const err = chrome.runtime.lastError?.message;
+        if (err) {
+          addLog(`Scan unavailable: ${err}. Refresh the webpage first.`, "warning");
+          return;
+        }
         if (res?.ok && res.detections) {
           const count = res.detections.length;
           addLog(`Privacy scan found ${count} sensitive items.`, count > 0 ? "warning" : "success");
@@ -213,6 +249,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     chrome.runtime.sendMessage({ type: "RUN_AGENT", task }, (res: RunAgentResponse) => {
       btnRunAgent.disabled = false;
+      const err = chrome.runtime.lastError?.message;
+      if (err) {
+        addLog(`Agent execution error: ${err}`, "danger");
+        return;
+      }
+
       if (res?.ok) {
         if (res.capturedContext) {
           updateContextUI(res.capturedContext);

@@ -60,4 +60,23 @@ describe("Privacy Firewall — Pre-Flight Outbound Leak Prevention", () => {
         expect(result.blocked).toBe(true);
         expect(result.violations?.length).toBeGreaterThan(0);
     });
+    it("should permit sanitized email placeholders in link node text", () => {
+        const sanitizedEmailPayload = {
+            task: "Contact the department",
+            screenshot: "data:image/png;base64,sample",
+            dom: {
+                nodes: [
+                    {
+                        agentId: "el-29",
+                        tag: "a",
+                        role: "link",
+                        text: "[EMAIL_REDACTED]",
+                        sensitive: true
+                    }
+                ]
+            }
+        };
+        const result = PrivacyFirewall.validateOutboundPayload(sanitizedEmailPayload);
+        expect(result.blocked).toBe(false);
+    });
 });
